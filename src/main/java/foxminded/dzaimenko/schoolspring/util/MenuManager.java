@@ -8,8 +8,8 @@ import foxminded.dzaimenko.schoolspring.dao.impl.StudentDAOImpl;
 import foxminded.dzaimenko.schoolspring.model.Course;
 import foxminded.dzaimenko.schoolspring.model.Group;
 import foxminded.dzaimenko.schoolspring.model.Student;
+import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class MenuManager {
+
     private final String MAIN_MENU_REQUEST = """
             ______________________________________________________________
             Enter a request from 1 to 6 or 0 to complete the job:
@@ -32,14 +33,11 @@ public class MenuManager {
             Enter the number of the selected request:""";
 
     private final Map<Integer, Runnable> options;
-    private final Connection connection;
     private final Scanner scanner;
     private int totalStudents;
 
-
-    public MenuManager(Map<Integer, Runnable> options, Connection connection, Scanner scanner) {
+    public MenuManager(Map<Integer, Runnable> options, JdbcTemplate jdbcTemplate, Scanner scanner) {
         this.options = options;
-        this.connection = connection;
         this.scanner = scanner;
     }
 
@@ -83,10 +81,30 @@ public class MenuManager {
 
     public void menuFindGroupsByMinStudentsCount() {
 
-        System.out.println("Groups with less or equal students:");
+        int maxStudentCount = 0;
+        int attempts = 0;
 
-        GroupDAO groupDAO = new GroupDAOImpl(connection);
-        Map<Group, Integer> groups = groupDAO.findGroupsByMinStudentsCount();
+        while (attempts < 3) {
+            System.out.println("Enter the maximum number of students from 1 to " + totalStudents + ":");
+            int userInput = scanner.nextInt();
+
+            if (userInput < 1 || userInput > totalStudents) {
+                System.out.println("Invalid value");
+                attempts++;
+            } else {
+                maxStudentCount = userInput;
+                break;
+            }
+        }
+
+        if (attempts == 3) {
+            System.out.println("Reached maximum attempts. Exiting program.");
+            System.exit(0);
+
+        }
+
+        GroupDAO groupDAO = new GroupDAOImpl(jdbcTemplate);
+        List<Group> groups = groupDAO.findGroupsWithMaxStudentCount(maxStudentCount);
 
         if (groups.isEmpty()) {
             System.out.println("No groups found");
@@ -117,7 +135,7 @@ public class MenuManager {
             return;
         }
 
-        System.out.println("Students studying " + course+ ":");
+        System.out.println("Students studying " + course + ":");
         for (int i = 0; i < students.size(); i++) {
             Student student = students.get(i);
             System.out.println((i + 1) + ". " + student.getFirstName() + " " + student.getLastName());

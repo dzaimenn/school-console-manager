@@ -1,7 +1,7 @@
 package foxminded.dzaimenko.schoolspring;
 
-import foxminded.dzaimenko.schoolspring.util.DatabaseConnector;
 import foxminded.dzaimenko.schoolspring.util.MenuManager;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,7 +18,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        String sqlScriptPath = "/init.sql";
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
 
         try (Connection connection = DatabaseConnector.getInstance().getConnection();
              Statement statement = connection.createStatement();
@@ -100,10 +100,8 @@ public class Main {
     }
 
     public static void shutdown() {
-        DatabaseConnector.closeConnection();
-        System.out.println("""
-                Exiting the program
-                """);
+
+        System.out.println("Exiting the program");
         System.exit(0);
     }
 

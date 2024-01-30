@@ -2,24 +2,24 @@ package foxminded.dzaimenko.schoolspring.dao.impl;
 
 import foxminded.dzaimenko.schoolspring.dao.StudentDAO;
 import foxminded.dzaimenko.schoolspring.model.Student;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
 import java.util.List;
 
+@Component
 public class StudentDAOImpl implements StudentDAO {
 
-    private final Connection connection;
+    private final JdbcTemplate jdbcTemplate;
 
-    public StudentDAOImpl(Connection connection) {
-        this.connection = connection;
+    @Autowired
+    public StudentDAOImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
-    public List<Student> findStudentsByCourseName(String course) {
 
-        List<Student> students = new ArrayList<>();
+
+    public List<Student> findStudentsByCourseName(String course) {
 
         String sqlFindStudentsByCourse = """
                 SELECT students.student_id, students.first_name, students.last_name
@@ -29,29 +29,7 @@ public class StudentDAOImpl implements StudentDAO {
                 WHERE courses.course_name = ?
                 """;
 
-        try (PreparedStatement ps = connection.prepareStatement(sqlFindStudentsByCourse)) {
-            ps.setString(1, course);
-
-            try (ResultSet rs = ps.executeQuery()) {
-
-                while (rs.next()) {
-
-                    String studentFirstName = rs.getString("first_name");
-                    String studentLastName = rs.getString("last_name");
-
-                    Student student = Student.builder()
-                            .firstName(studentFirstName)
-                            .lastName(studentLastName)
-                            .build();
-
-                    students.add(student);
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-        return students;
+        return jdbcTemplate.query(sqlFindStudentsByCourse, new Object[]{course}, new BeanPropertyRowMapper<>(Student.class));
     }
 
 
@@ -62,17 +40,8 @@ public class StudentDAOImpl implements StudentDAO {
                 VALUES (?,?);
                 """;
 
-        try (PreparedStatement ps = connection.prepareStatement(sqlAddNewStudent)) {
-            ps.setString(1, firstName);
-            ps.setString(2, lastName);
-
-            ps.executeUpdate();
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        jdbcTemplate.update(sqlAddNewStudent, firstName, lastName);
     }
-
 
 
     public void deleteStudentById(int studentId) {
@@ -87,16 +56,7 @@ public class StudentDAOImpl implements StudentDAO {
                 WHERE student_id = ?;;
                 """;
 
-        try (PreparedStatement ps = connection.prepareStatement(sqlDeleteStudentById)) {
-            ps.setInt(1, studentId);
-            ps.setInt(2, studentId);
-
-            ps.executeUpdate();
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
+        jdbcTemplate.update(sqlDeleteStudentById, studentId);
     }
 
     public void addStudentToCourse(int studentId, int courseId) {
@@ -106,15 +66,7 @@ public class StudentDAOImpl implements StudentDAO {
                 VALUES (?, ?);
                 """;
 
-        try (PreparedStatement ps = connection.prepareStatement(sqlAddStudentToCourse)) {
-            ps.setInt(1, studentId);
-            ps.setInt(2, courseId);
-
-            ps.executeUpdate();
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        jdbcTemplate.update(sqlAddStudentToCourse, studentId, courseId);
 
     }
 
@@ -125,15 +77,7 @@ public class StudentDAOImpl implements StudentDAO {
                 WHERE student_id = ? AND course_id = ?;
                 """;
 
-        try (PreparedStatement ps = connection.prepareStatement(sqlRemoveStudentFromCourse)) {
-            ps.setInt(1, idStudentToRemoveFromCourse);
-            ps.setInt(2, idCourse);
-
-            ps.executeUpdate();
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        jdbcTemplate.update(sqlRemoveStudentFromCourse, idStudentToRemoveFromCourse, idCourse);
     }
 
 }
