@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
+import java.util.Scanner;
 
 @Configuration
 public class SpringConfig {
@@ -34,6 +35,11 @@ public class SpringConfig {
     @Bean
     public JdbcTemplate jdbcTemplate() {
         return new JdbcTemplate(dataSource());
+    }
+
+    @Bean
+    public Scanner scanner() {
+        return new Scanner(System.in);
     }
 
 }

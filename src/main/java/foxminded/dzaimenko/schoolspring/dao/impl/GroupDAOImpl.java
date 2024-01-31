@@ -2,7 +2,6 @@ package foxminded.dzaimenko.schoolspring.dao.impl;
 
 import foxminded.dzaimenko.schoolspring.dao.GroupDAO;
 import foxminded.dzaimenko.schoolspring.model.Group;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -13,7 +12,6 @@ public class GroupDAOImpl implements GroupDAO {
 
     private final JdbcTemplate jdbcTemplate;
 
-    @Autowired
     public GroupDAOImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }

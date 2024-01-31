@@ -2,7 +2,6 @@ package foxminded.dzaimenko.schoolspring.dao.impl;
 
 import foxminded.dzaimenko.schoolspring.dao.StudentDAO;
 import foxminded.dzaimenko.schoolspring.model.Student;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -13,11 +12,9 @@ public class StudentDAOImpl implements StudentDAO {
 
     private final JdbcTemplate jdbcTemplate;
 
-    @Autowired
     public StudentDAOImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-
 
     public List<Student> findStudentsByCourseName(String course) {
 

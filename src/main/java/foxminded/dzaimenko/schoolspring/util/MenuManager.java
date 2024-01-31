@@ -8,15 +8,16 @@ import foxminded.dzaimenko.schoolspring.dao.impl.StudentDAOImpl;
 import foxminded.dzaimenko.schoolspring.model.Course;
 import foxminded.dzaimenko.schoolspring.model.Group;
 import foxminded.dzaimenko.schoolspring.model.Student;
-import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+@Component
 public class MenuManager {
 
     private final String MAIN_MENU_REQUEST = """
@@ -32,11 +33,13 @@ public class MenuManager {
                         
             Enter the number of the selected request:""";
 
+    private final JdbcTemplate jdbcTemplate;
     private final Map<Integer, Runnable> options;
     private final Scanner scanner;
     private int totalStudents;
 
-    public MenuManager(Map<Integer, Runnable> options, JdbcTemplate jdbcTemplate, Scanner scanner) {
+    public MenuManager(JdbcTemplate jdbcTemplate, Map<Integer, Runnable> options, Scanner scanner) {
+        this.jdbcTemplate = jdbcTemplate;
         this.options = options;
         this.scanner = scanner;
     }
@@ -111,11 +114,9 @@ public class MenuManager {
             return;
         }
 
-        for (Map.Entry<Group, Integer> entry : groups.entrySet()) {
-            Group group = entry.getKey();
-            int studentCount = entry.getValue();
-
-            System.out.println("Group ID: " + group.getGroupId() + ", Group name: " + group.getGroupName() + ", Students count: " + studentCount);
+        System.out.println("Groups with " + maxStudentCount + " or fewer students:");
+        for (Group group : groups) {
+            System.out.println("Group ID: " + group.getGroupId() + ", Group name: " + group.getGroupName());
         }
 
     }
@@ -127,7 +128,7 @@ public class MenuManager {
         String courseNumberPrompt = "Enter course number:";
         String course = SchoolData.coursesNames[(Main.validateNumericInput(scanner, courseNumberPrompt, 1, 10) - 1)];
 
-        StudentDAO studentDAO = new StudentDAOImpl(connection);
+        StudentDAO studentDAO = new StudentDAOImpl(jdbcTemplate);
         List<Student> students = studentDAO.findStudentsByCourseName(course);
 
         if (students.isEmpty()) {
@@ -156,22 +157,18 @@ public class MenuManager {
         System.out.println("Enter the last name of the new student:");
         String lastName = scanner.nextLine();
 
-        StudentDAO student = new StudentDAOImpl(connection);
+        StudentDAO student = new StudentDAOImpl(jdbcTemplate);
         student.addNewStudent(firstName, lastName);
     }
 
     private int getNumberOfStudents() {
-
         String sqlGetNumberOfStudents = "SELECT COUNT(*) AS total_students FROM students";
-        try (PreparedStatement ps = connection.prepareStatement(sqlGetNumberOfStudents)) {
-            try (ResultSet rs = ps.executeQuery()) {
+        Integer result = jdbcTemplate.queryForObject(sqlGetNumberOfStudents, Integer.class);
 
-                if (rs.next()) {
-                    totalStudents = rs.getInt("total_students");
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        if (result != null) {
+            totalStudents = result;
+        } else {
+            totalStudents = 0;
         }
 
         return totalStudents;
@@ -185,28 +182,17 @@ public class MenuManager {
         System.out.println("The school has " + totalStudents + " students");
         int idStudentToDelete = Main.validateNumericInput(scanner, prompt, 1, totalStudents);
 
-        StudentDAO studentDAO = new StudentDAOImpl(connection);
+        StudentDAO studentDAO = new StudentDAOImpl(jdbcTemplate);
         studentDAO.deleteStudentById(idStudentToDelete);
 
     }
 
     private void showAllStudents() {
         String sqlShowAllStudents = "SELECT * FROM students";
+        List<Student> students = jdbcTemplate.query(sqlShowAllStudents, BeanPropertyRowMapper.newInstance(Student.class));
 
-        try (PreparedStatement ps = connection.prepareStatement(sqlShowAllStudents)) {
-            try (ResultSet rs = ps.executeQuery()) {
-
-                while (rs.next()) {
-                    int studentId = rs.getInt("student_id");
-                    String firstName = rs.getString("first_name");
-                    String lastName = rs.getString("last_name");
-
-                    System.out.println("ID: " + studentId + ", Student: " + firstName + " " + lastName);
-                }
-
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        for (Student student : students) {
+            System.out.println("ID: " + student.getStudentId() + ", Student: " + student.getFirstName() + " " + student.getLastName());
         }
     }
 
@@ -221,7 +207,7 @@ public class MenuManager {
         showAllCourses();
         int idCourse = Main.validateNumericInput(scanner, promptCourseAdd, 1, 10);
 
-        StudentDAO studentDAO = new StudentDAOImpl(connection);
+        StudentDAO studentDAO = new StudentDAOImpl(jdbcTemplate);
         studentDAO.addStudentToCourse(idStudentToAddToCourse, idCourse);
     }
 
@@ -234,23 +220,10 @@ public class MenuManager {
                 WHERE student_courses.student_id = ?;
                 """;
 
-        try (PreparedStatement psSelectCourses = connection.prepareStatement(sqlSelectCourses)) {
-            psSelectCourses.setInt(1, studentId);
+        List<Course> courses = jdbcTemplate.query(sqlSelectCourses, new Object[]{studentId}, new BeanPropertyRowMapper<>(Course.class));
 
-            ResultSet resultSet = psSelectCourses.executeQuery();
-
-            while (resultSet.next()) {
-
-                Course course = Course.builder()
-                        .courseId(resultSet.getInt("course_id"))
-                        .courseName(resultSet.getString("course_name"))
-                        .build();
-
-                System.out.println(course.getCourseId() + ". " + course.getCourseName());
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        for (Course course: courses) {
+            System.out.println(course.getCourseId() + ". " + course.getCourseName());
         }
     }
 
@@ -265,7 +238,7 @@ public class MenuManager {
         showCoursesForStudent(idStudentToRemoveFromCourse);
         int idCourse = Main.validateNumericInput(scanner, promptCourseRemove, 1, 10);
 
-        StudentDAO studentDAO = new StudentDAOImpl(connection);
+        StudentDAO studentDAO = new StudentDAOImpl(jdbcTemplate);
         studentDAO.removeStudentFromCourse(idStudentToRemoveFromCourse, idCourse);
     }
 
