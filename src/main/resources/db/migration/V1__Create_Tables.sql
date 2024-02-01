@@ -1,3 +1,4 @@
+-- GRANT ALL PRIVILEGES ON SCHEMA public TO school_manager;
 DROP TABLE IF EXISTS student_courses;
 DROP TABLE IF EXISTS groups;
 DROP TABLE IF EXISTS students;

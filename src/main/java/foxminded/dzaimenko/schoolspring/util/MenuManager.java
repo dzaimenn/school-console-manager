@@ -1,6 +1,6 @@
 package foxminded.dzaimenko.schoolspring.util;
 
-import foxminded.dzaimenko.schoolspring.Main;
+import foxminded.dzaimenko.schoolspring.SchoolSpringApplication;
 import foxminded.dzaimenko.schoolspring.dao.GroupDAO;
 import foxminded.dzaimenko.schoolspring.dao.StudentDAO;
 import foxminded.dzaimenko.schoolspring.dao.impl.GroupDAOImpl;
@@ -126,7 +126,7 @@ public class MenuManager {
         showAllCourses();
 
         String courseNumberPrompt = "Enter course number:";
-        String course = SchoolData.coursesNames[(Main.validateNumericInput(scanner, courseNumberPrompt, 1, 10) - 1)];
+        String course = SchoolData.coursesNames[(SchoolSpringApplication.validateNumericInput(scanner, courseNumberPrompt, 1, 10) - 1)];
 
         StudentDAO studentDAO = new StudentDAOImpl(jdbcTemplate);
         List<Student> students = studentDAO.findStudentsByCourseName(course);
@@ -180,7 +180,7 @@ public class MenuManager {
         String prompt = "Enter the ID of the student to be removed (from 1 to " + totalStudents + "):";
 
         System.out.println("The school has " + totalStudents + " students");
-        int idStudentToDelete = Main.validateNumericInput(scanner, prompt, 1, totalStudents);
+        int idStudentToDelete = SchoolSpringApplication.validateNumericInput(scanner, prompt, 1, totalStudents);
 
         StudentDAO studentDAO = new StudentDAOImpl(jdbcTemplate);
         studentDAO.deleteStudentById(idStudentToDelete);
@@ -201,11 +201,11 @@ public class MenuManager {
         showAllStudents();
 
         String promptStudentAdd = "Enter the student ID to add to the course:";
-        int idStudentToAddToCourse = Main.validateNumericInput(scanner, promptStudentAdd, 1, totalStudents);
+        int idStudentToAddToCourse = SchoolSpringApplication.validateNumericInput(scanner, promptStudentAdd, 1, totalStudents);
 
         String promptCourseAdd = "Enter course number:";
         showAllCourses();
-        int idCourse = Main.validateNumericInput(scanner, promptCourseAdd, 1, 10);
+        int idCourse = SchoolSpringApplication.validateNumericInput(scanner, promptCourseAdd, 1, 10);
 
         StudentDAO studentDAO = new StudentDAOImpl(jdbcTemplate);
         studentDAO.addStudentToCourse(idStudentToAddToCourse, idCourse);
@@ -232,11 +232,11 @@ public class MenuManager {
         showAllStudents();
 
         String promptStudentRemove = "Enter the student ID to remove from the course:";
-        int idStudentToRemoveFromCourse = Main.validateNumericInput(scanner, promptStudentRemove, 1, totalStudents);
+        int idStudentToRemoveFromCourse = SchoolSpringApplication.validateNumericInput(scanner, promptStudentRemove, 1, totalStudents);
 
         String promptCourseRemove = "Enter course ID:";
         showCoursesForStudent(idStudentToRemoveFromCourse);
-        int idCourse = Main.validateNumericInput(scanner, promptCourseRemove, 1, 10);
+        int idCourse = SchoolSpringApplication.validateNumericInput(scanner, promptCourseRemove, 1, 10);
 
         StudentDAO studentDAO = new StudentDAOImpl(jdbcTemplate);
         studentDAO.removeStudentFromCourse(idStudentToRemoveFromCourse, idCourse);
