@@ -32,7 +32,7 @@ public class DatabaseFiller {
         String insertGroupsQuery = "INSERT INTO groups (group_name) VALUES (?)";
         for (int i = 0; i < 10; i++) {
             String groupName = SchoolData.groupsNames[i];
-            jdbcTemplate.update(insertGroupsQuery);
+            jdbcTemplate.update(insertGroupsQuery, groupName);
         }
     }
 
@@ -59,15 +59,20 @@ public class DatabaseFiller {
 
     private void studentsCoursesTableFill() {
         String insertStudentCoursesQuery = "INSERT INTO student_courses (student_id, course_id) VALUES (?,?)";
+
         for (int studentId = 1; studentId <= 200; studentId++) {
+
             Set<Integer> assignedCourses = new HashSet<>();
             int numberOfCourses = random.nextInt(3) + 1;
+
             while (assignedCourses.size() < numberOfCourses) {
                 int courseId = random.nextInt(10) + 1;
+
                 if (assignedCourses.add(courseId)) {
                     jdbcTemplate.update(insertStudentCoursesQuery, studentId, courseId);
                 }
             }
         }
     }
+
 }
