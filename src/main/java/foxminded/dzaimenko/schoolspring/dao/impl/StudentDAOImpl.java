@@ -4,77 +4,74 @@ import foxminded.dzaimenko.schoolspring.dao.StudentDAO;
 import foxminded.dzaimenko.schoolspring.model.Student;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
-@Component
+@Repository
 public class StudentDAOImpl implements StudentDAO {
 
     private final JdbcTemplate jdbcTemplate;
+    private static final String SQL_FIND_STUDENTS_BY_COURSE = """
+            SELECT students.student_id, students.first_name, students.last_name
+            FROM students
+            JOIN student_courses ON students.student_id = student_courses.student_id
+            JOIN courses ON student_courses.course_id = courses.course_id
+            WHERE courses.course_name = ?
+            """;
+
+    private static final String SQL_ADD_NEW_STUDENT = """
+            INSERT INTO students (first_name, last_name)
+            VALUES (?,?);
+            """;
+
+    private static final String SQL_DELETE_STUDENT_BY_ID = """
+            WITH deleted_student_courses AS (
+                DELETE FROM student_courses
+                WHERE student_id = ?
+                RETURNING *
+            )
+            DELETE FROM students
+            WHERE student_id = ?;
+            """;
+
+    private static final String SQL_ADD_STUDENT_TO_COURSE = """
+            INSERT INTO student_courses (student_id, course_id)
+            VALUES (?, ?);
+            """;
+
+    private static final String SQL_REMOVE_STUDENT_FROM_COURSE = """
+            DELETE FROM student_courses
+            WHERE student_id = ? AND course_id = ?;
+            """;
 
     public StudentDAOImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public List<Student> findStudentsByCourseName(String course) {
-
-        String sqlFindStudentsByCourse = """
-                SELECT students.student_id, students.first_name, students.last_name
-                FROM students
-                JOIN student_courses ON students.student_id = student_courses.student_id
-                JOIN courses ON student_courses.course_id = courses.course_id
-                WHERE courses.course_name = ?
-                """;
-
-        return jdbcTemplate.query(sqlFindStudentsByCourse, new Object[]{course}, new BeanPropertyRowMapper<>(Student.class));
+        return jdbcTemplate.query(SQL_FIND_STUDENTS_BY_COURSE, new Object[]{course}, new BeanPropertyRowMapper<>(Student.class));
     }
 
-
+    @Override
     public void addNewStudent(String firstName, String lastName) {
-
-        String sqlAddNewStudent = """
-                INSERT INTO students (first_name, last_name)
-                VALUES (?,?);
-                """;
-
-        jdbcTemplate.update(sqlAddNewStudent, firstName, lastName);
+        jdbcTemplate.update(SQL_ADD_NEW_STUDENT, firstName, lastName);
     }
 
-
+    @Override
     public void deleteStudentById(int studentId) {
-
-        String sqlDeleteStudentById = """
-                WITH deleted_student_courses AS (
-                    DELETE FROM student_courses
-                    WHERE student_id = ?
-                    RETURNING *
-                )
-                DELETE FROM students
-                WHERE student_id = ?;;
-                """;
-
-        jdbcTemplate.update(sqlDeleteStudentById, studentId);
+        jdbcTemplate.update(SQL_DELETE_STUDENT_BY_ID, studentId);
     }
 
+    @Override
     public void addStudentToCourse(int studentId, int courseId) {
-
-        String sqlAddStudentToCourse = """
-                INSERT INTO student_courses (student_id, course_id)
-                VALUES (?, ?);
-                """;
-
-        jdbcTemplate.update(sqlAddStudentToCourse, studentId, courseId);
-
+        jdbcTemplate.update(SQL_ADD_STUDENT_TO_COURSE, studentId, courseId);
     }
 
+    @Override
     public void removeStudentFromCourse(int idStudentToRemoveFromCourse, int idCourse) {
-
-        String sqlRemoveStudentFromCourse = """
-                DELETE FROM student_courses
-                WHERE student_id = ? AND course_id = ?;
-                """;
-
-        jdbcTemplate.update(sqlRemoveStudentFromCourse, idStudentToRemoveFromCourse, idCourse);
+        jdbcTemplate.update(SQL_REMOVE_STUDENT_FROM_COURSE, idStudentToRemoveFromCourse, idCourse);
     }
 
 }
