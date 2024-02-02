@@ -19,7 +19,7 @@ import java.util.Scanner;
 public class SchoolSpringApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SchoolSpringApplication.class, args);
+//        SpringApplication.run(SchoolSpringApplication.class, args);
 
         ApplicationContext context = SpringApplication.run(SchoolSpringApplication.class, args);
         JdbcTemplate jdbcTemplate = context.getBean(JdbcTemplate.class);
