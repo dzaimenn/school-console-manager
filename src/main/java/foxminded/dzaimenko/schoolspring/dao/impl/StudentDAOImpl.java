@@ -45,6 +45,8 @@ public class StudentDAOImpl implements StudentDAO {
             WHERE student_id = ? AND course_id = ?;
             """;
 
+    private static final String SQL_SELECT_ALL_STUDENTS = "SELECT * FROM students";
+
     public StudentDAOImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -72,6 +74,10 @@ public class StudentDAOImpl implements StudentDAO {
     @Override
     public void removeStudentFromCourse(int idStudentToRemoveFromCourse, int idCourse) {
         jdbcTemplate.update(SQL_REMOVE_STUDENT_FROM_COURSE, idStudentToRemoveFromCourse, idCourse);
+    }
+
+    public List<Student> getAllStudents() {
+        return jdbcTemplate.query(SQL_SELECT_ALL_STUDENTS, BeanPropertyRowMapper.newInstance(Student.class));
     }
 
 }

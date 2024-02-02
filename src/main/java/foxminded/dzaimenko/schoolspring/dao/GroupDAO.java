@@ -8,4 +8,12 @@ public interface GroupDAO {
 
     List<Group> findGroupsWithMaxStudentCount(int maxStudentCount);
 
+    void createGroup(Group group);
+
+    List<Group> getAllGroups();
+
+    void updateGroup(Group group);
+
+    void deleteGroupById(int groupId);
+
 }
