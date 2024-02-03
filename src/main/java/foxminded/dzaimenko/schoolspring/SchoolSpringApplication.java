@@ -1,7 +1,7 @@
 package foxminded.dzaimenko.schoolspring;
 
 import foxminded.dzaimenko.schoolspring.config.SpringConfig;
-import foxminded.dzaimenko.schoolspring.util.MenuManager;
+import foxminded.dzaimenko.schoolspring.menu.MenuManager;
 import org.flywaydb.core.Flyway;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,14 +21,13 @@ public class SchoolSpringApplication {
     public static void main(String[] args) {
 
         ApplicationContext context = SpringApplication.run(SchoolSpringApplication.class, args);
-        JdbcTemplate jdbcTemplate = context.getBean(JdbcTemplate.class);
-        Scanner scanner = context.getBean(Scanner.class);
+
 
         Flyway flyway = context.getBean(Flyway.class);
         flyway.migrate();
 
+        MenuManager menuManager = context.getBean(MenuManager.class);
         Map<Integer, Runnable> options = new HashMap<>();
-        MenuManager menuManager = new MenuManager(jdbcTemplate, options, scanner);
 
         options.put(1, menuManager::menuFindGroupsByMinStudentsCount);
         options.put(2, menuManager::menuFindStudentsByCourseName);
@@ -39,15 +38,8 @@ public class SchoolSpringApplication {
         options.put(0, SchoolSpringApplication::shutdown);
 
 
-        fillDatabase(jdbcTemplate);
         menuManager.requestManagement();
 
-    }
-
-    private static void fillDatabase(JdbcTemplate jdbcTemplate) {
-        DatabaseFiller databaseFiller = new DatabaseFiller(jdbcTemplate);
-        databaseFiller.fillDataBase();
-        System.out.println("Database filled successfully");
     }
 
     public static int validateNumericInput(Scanner scanner, String prompt, int lowerBound, int upperBound) {

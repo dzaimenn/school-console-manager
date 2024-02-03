@@ -1,4 +1,4 @@
-package foxminded.dzaimenko.schoolspring.util;
+package foxminded.dzaimenko.schoolspring.menu;
 
 import foxminded.dzaimenko.schoolspring.SchoolSpringApplication;
 import foxminded.dzaimenko.schoolspring.dao.GroupDAO;
@@ -9,10 +9,11 @@ import foxminded.dzaimenko.schoolspring.model.Course;
 import foxminded.dzaimenko.schoolspring.model.Group;
 import foxminded.dzaimenko.schoolspring.model.Student;
 
+import foxminded.dzaimenko.schoolspring.util.SchoolData;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -33,15 +34,14 @@ public class MenuManager {
                         
             Enter the number of the selected request:""";
 
-    private final JdbcTemplate jdbcTemplate;
+
     private final Map<Integer, Runnable> options;
-    private final Scanner scanner;
+    private Scanner scanner;
     private int totalStudents;
 
-    public MenuManager(JdbcTemplate jdbcTemplate, Map<Integer, Runnable> options, Scanner scanner) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.options = options;
+    public MenuManager(Scanner scanner) {
         this.scanner = scanner;
+        this.options = new HashMap<>();
     }
 
     public void displayMainMenu() {
@@ -188,8 +188,8 @@ public class MenuManager {
     }
 
     private void showAllStudents() {
-        String sqlShowAllStudents = "SELECT * FROM students";
-        List<Student> students = jdbcTemplate.query(sqlShowAllStudents, BeanPropertyRowMapper.newInstance(Student.class));
+
+        StudentDAO students = new StudentDAOImpl(jdbcTemplate);
 
         for (Student student : students) {
             System.out.println("ID: " + student.getStudentId() + ", Student: " + student.getFirstName() + " " + student.getLastName());

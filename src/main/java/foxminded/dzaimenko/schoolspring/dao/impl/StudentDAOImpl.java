@@ -75,7 +75,7 @@ public class StudentDAOImpl implements StudentDAO {
     public void removeStudentFromCourse(int idStudentToRemoveFromCourse, int idCourse) {
         jdbcTemplate.update(SQL_REMOVE_STUDENT_FROM_COURSE, idStudentToRemoveFromCourse, idCourse);
     }
-
+    @Override
     public List<Student> getAllStudents() {
         return jdbcTemplate.query(SQL_SELECT_ALL_STUDENTS, BeanPropertyRowMapper.newInstance(Student.class));
     }

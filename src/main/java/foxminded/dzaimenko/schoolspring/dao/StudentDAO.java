@@ -11,5 +11,6 @@ public interface StudentDAO {
     void deleteStudentById(int iD);
     void addStudentToCourse(int idStudentToAddToCourse, int idCourse);
     void removeStudentFromCourse(int idStudentToRemoveFromCourse, int idCourse);
+    List<Student> getAllStudents();
 
 }
