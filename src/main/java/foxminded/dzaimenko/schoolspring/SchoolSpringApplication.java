@@ -1,13 +1,11 @@
 package foxminded.dzaimenko.schoolspring;
 
 import foxminded.dzaimenko.schoolspring.config.SpringConfig;
-import foxminded.dzaimenko.schoolspring.menu.MenuManager;
 import org.flywaydb.core.Flyway;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Import;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -47,6 +47,8 @@ public class StudentDAOImpl implements StudentDAO {
 
     private static final String SQL_SELECT_ALL_STUDENTS = "SELECT * FROM students";
 
+    private static final String SQL_GET_NUMBER_OF_STUDENTS = "SELECT COUNT(*) AS total_students FROM students";
+
     public StudentDAOImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -78,6 +80,19 @@ public class StudentDAOImpl implements StudentDAO {
     @Override
     public List<Student> getAllStudents() {
         return jdbcTemplate.query(SQL_SELECT_ALL_STUDENTS, BeanPropertyRowMapper.newInstance(Student.class));
+    }
+    @Override
+    public int getNumberOfStudents() {
+        int totalStudents;
+
+        Integer result = jdbcTemplate.queryForObject(SQL_GET_NUMBER_OF_STUDENTS, Integer.class);
+
+        if (result != null) {
+            totalStudents = result;
+        } else {
+            totalStudents = 0;
+        }
+        return totalStudents;
     }
 
 }

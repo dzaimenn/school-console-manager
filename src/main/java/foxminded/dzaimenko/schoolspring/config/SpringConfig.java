@@ -7,7 +7,10 @@ import foxminded.dzaimenko.schoolspring.dao.StudentDAO;
 import foxminded.dzaimenko.schoolspring.dao.impl.CourseDAOImpl;
 import foxminded.dzaimenko.schoolspring.dao.impl.GroupDAOImpl;
 import foxminded.dzaimenko.schoolspring.dao.impl.StudentDAOImpl;
-import jakarta.annotation.PostConstruct;
+import foxminded.dzaimenko.schoolspring.menu.CourseMenu;
+import foxminded.dzaimenko.schoolspring.menu.GroupMenu;
+import foxminded.dzaimenko.schoolspring.menu.MainMenu;
+import foxminded.dzaimenko.schoolspring.menu.StudentMenu;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -74,6 +77,26 @@ public class SpringConfig {
     @Bean
     public StudentDAO studentDAO(JdbcTemplate jdbcTemplate) {
         return new StudentDAOImpl(jdbcTemplate);
+    }
+
+    @Bean
+    public StudentMenu studentMenu(Scanner scanner) {
+        return new StudentMenu(scanner);
+    }
+
+    @Bean
+    public GroupMenu groupMenu(Scanner scanner) {
+        return new GroupMenu(scanner);
+    }
+
+    @Bean
+    public CourseMenu courseMenu(Scanner scanner) {
+        return new CourseMenu(scanner);
+    }
+
+    @Bean
+    public MainMenu mainMenu(Scanner scanner, StudentMenu studentMenu, GroupMenu groupMenu, CourseMenu courseMenu) {
+        return new MainMenu(scanner, studentMenu, groupMenu, courseMenu);
     }
 
 }
