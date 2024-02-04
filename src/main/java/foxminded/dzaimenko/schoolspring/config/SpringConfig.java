@@ -1,6 +1,6 @@
 package foxminded.dzaimenko.schoolspring.config;
 
-import foxminded.dzaimenko.schoolspring.DatabaseFiller;
+import foxminded.dzaimenko.schoolspring.util.DatabaseFiller;
 import foxminded.dzaimenko.schoolspring.dao.CourseDAO;
 import foxminded.dzaimenko.schoolspring.dao.GroupDAO;
 import foxminded.dzaimenko.schoolspring.dao.StudentDAO;
@@ -80,18 +80,18 @@ public class SpringConfig {
     }
 
     @Bean
-    public StudentMenu studentMenu(Scanner scanner) {
-        return new StudentMenu(scanner);
+    public StudentMenu studentMenu(Scanner scanner, StudentDAO studentDAO) {
+        return new StudentMenu(scanner, studentDAO);
     }
 
     @Bean
-    public GroupMenu groupMenu(Scanner scanner) {
-        return new GroupMenu(scanner);
+    public GroupMenu groupMenu(Scanner scanner, GroupDAO groupDAO) {
+        return new GroupMenu(scanner, groupDAO);
     }
 
     @Bean
-    public CourseMenu courseMenu(Scanner scanner) {
-        return new CourseMenu(scanner);
+    public CourseMenu courseMenu(Scanner scanner, CourseDAO courseDAO) {
+        return new CourseMenu(scanner, courseDAO);
     }
 
     @Bean

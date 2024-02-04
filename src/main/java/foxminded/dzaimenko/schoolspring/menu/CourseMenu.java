@@ -1,5 +1,7 @@
 package foxminded.dzaimenko.schoolspring.menu;
 
+import foxminded.dzaimenko.schoolspring.dao.CourseDAO;
+
 import java.util.Scanner;
 
 public class CourseMenu {
@@ -13,9 +15,11 @@ public class CourseMenu {
             """;
 
     private Scanner scanner;
+    private CourseDAO courseDAO;
 
-    public CourseMenu(Scanner scanner) {
+    public CourseMenu(Scanner scanner, CourseDAO courseDAO) {
         this.scanner = scanner;
+        this.courseDAO = courseDAO;
     }
 
 }

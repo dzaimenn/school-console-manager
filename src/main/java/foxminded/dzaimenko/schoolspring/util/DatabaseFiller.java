@@ -1,4 +1,4 @@
-package foxminded.dzaimenko.schoolspring;
+package foxminded.dzaimenko.schoolspring.util;
 
 
 import foxminded.dzaimenko.schoolspring.util.SchoolData;

@@ -1,5 +1,7 @@
 package foxminded.dzaimenko.schoolspring.menu;
 
+import foxminded.dzaimenko.schoolspring.dao.GroupDAO;
+
 import java.util.Scanner;
 
 public class GroupMenu {
@@ -14,9 +16,11 @@ public class GroupMenu {
             """;
 
     private Scanner scanner;
+    private GroupDAO groupDAO;
 
-    public GroupMenu(Scanner scanner) {
+    public GroupMenu(Scanner scanner, GroupDAO groupDAO) {
         this.scanner = scanner;
+        this.groupDAO = groupDAO;
     }
 
 }
