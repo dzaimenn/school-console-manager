@@ -1,7 +1,5 @@
 package foxminded.dzaimenko.schoolspring.util;
 
-
-import foxminded.dzaimenko.schoolspring.util.SchoolData;
 import jakarta.annotation.PostConstruct;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
