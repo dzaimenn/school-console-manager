@@ -48,7 +48,7 @@ public class GroupSubMenuImpl implements SubMenu {
                 case 0:
                     return;
                 default:
-                    System.out.println("Invalid option. Please enter a valid number.");
+                    System.out.println("Invalid option. Please enter a valid number:");
             }
         }
     }

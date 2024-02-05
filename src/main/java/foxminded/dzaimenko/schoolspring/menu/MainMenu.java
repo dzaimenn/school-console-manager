@@ -27,4 +27,29 @@ public class MainMenu {
         this.courseSubMenuImpl = courseSubMenuImpl;
     }
 
+    public void displayMainMenu() {
+        while (true) {
+            System.out.println(MAIN_MENU_REQUEST);
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1:
+                    studentSubMenuImpl.displayMenu();
+                    break;
+                case 2:
+                    groupSubMenuImpl.displayMenu();
+                    break;
+                case 3:
+                    courseSubMenuImpl.displayMenu();
+                    break;
+                case 0:
+                    System.out.println("Exiting the program.");
+                    System.exit(0);
+                default:
+                    System.out.println("Invalid option. Please enter a valid number:");
+            }
+        }
+    }
+
 }
