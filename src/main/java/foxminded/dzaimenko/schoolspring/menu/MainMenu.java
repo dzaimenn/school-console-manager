@@ -1,11 +1,9 @@
 package foxminded.dzaimenko.schoolspring.menu;
 
-import foxminded.dzaimenko.schoolspring.menu.impl.GroupSubMenuImpl;
-import foxminded.dzaimenko.schoolspring.menu.impl.StudentSubMenuImpl;
-import foxminded.dzaimenko.schoolspring.menu.impl.CourseSubMenuImpl;
+import org.springframework.stereotype.Component;
 
 import java.util.Scanner;
-
+@Component
 public class MainMenu {
     private final String MAIN_MENU_REQUEST = """
             ______________________________________________________________
@@ -15,16 +13,15 @@ public class MainMenu {
             3. Manage Course information
             0. Exit
             """;
-    private Scanner scanner;
-    private StudentSubMenuImpl studentSubMenuImpl;
-    private GroupSubMenuImpl groupSubMenuImpl;
-    private CourseSubMenuImpl courseSubMenuImpl;
+    private Scanner scanner = new Scanner(System.in);
+    private SubMenu studentSubMenu;
+    private SubMenu groupSubMenu;
+    private SubMenu courseSubMenu;
 
-    public MainMenu(Scanner scanner, StudentSubMenuImpl studentSubMenuImpl, GroupSubMenuImpl groupSubMenuImpl, CourseSubMenuImpl courseSubMenuImpl) {
-        this.scanner = scanner;
-        this.studentSubMenuImpl = studentSubMenuImpl;
-        this.groupSubMenuImpl = groupSubMenuImpl;
-        this.courseSubMenuImpl = courseSubMenuImpl;
+    public MainMenu(SubMenu studentSubMenu, SubMenu groupSubMenu, SubMenu courseSubMenu) {
+        this.studentSubMenu = studentSubMenu;
+        this.groupSubMenu = groupSubMenu;
+        this.courseSubMenu = courseSubMenu;
     }
 
     public void displayMainMenu() {
@@ -35,17 +32,17 @@ public class MainMenu {
 
             switch (choice) {
                 case 1:
-                    studentSubMenuImpl.displayMenu();
+                    studentSubMenu.displayMenu();
                     break;
                 case 2:
-                    groupSubMenuImpl.displayMenu();
+                    groupSubMenu.displayMenu();
                     break;
                 case 3:
-                    courseSubMenuImpl.displayMenu();
+                    courseSubMenu.displayMenu();
                     break;
                 case 0:
                     System.out.println("Exiting the program.");
-                    System.exit(0);
+                    break;
                 default:
                     System.out.println("Invalid option. Please enter a valid number:");
             }

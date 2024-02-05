@@ -1,5 +1,6 @@
 package foxminded.dzaimenko.schoolspring.config;
 
+import foxminded.dzaimenko.schoolspring.menu.SubMenu;
 import foxminded.dzaimenko.schoolspring.util.DatabaseFiller;
 import foxminded.dzaimenko.schoolspring.dao.CourseDAO;
 import foxminded.dzaimenko.schoolspring.dao.GroupDAO;

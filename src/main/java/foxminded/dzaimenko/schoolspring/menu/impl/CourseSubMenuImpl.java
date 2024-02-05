@@ -3,10 +3,11 @@ package foxminded.dzaimenko.schoolspring.menu.impl;
 import foxminded.dzaimenko.schoolspring.dao.CourseDAO;
 import foxminded.dzaimenko.schoolspring.menu.SubMenu;
 import foxminded.dzaimenko.schoolspring.model.Course;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Scanner;
-
+@Component
 public class CourseSubMenuImpl implements SubMenu {
     private final String COURSE_MENU_REQUEST = """
             ______________________________________________________________
@@ -18,11 +19,10 @@ public class CourseSubMenuImpl implements SubMenu {
             0. Return to Main Menu
             """;
 
-    private Scanner scanner;
-    private CourseDAO courseDAO;
+    private final Scanner scanner = new Scanner(System.in);
+    private final CourseDAO courseDAO;
 
-    public CourseSubMenuImpl(Scanner scanner, CourseDAO courseDAO) {
-        this.scanner = scanner;
+    public CourseSubMenuImpl(CourseDAO courseDAO) {
         this.courseDAO = courseDAO;
     }
 

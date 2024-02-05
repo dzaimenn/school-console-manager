@@ -10,7 +10,7 @@ import java.util.Set;
 
 @Component
 public class DatabaseFiller {
-    private final Random random;
+    private final Random random = new Random();
     private final JdbcTemplate jdbcTemplate;
 
     private static final String SQL_INSERT_GROUPS = "INSERT INTO groups (group_name) VALUES (?)";
@@ -18,8 +18,7 @@ public class DatabaseFiller {
     private static final String SQL_INSERT_COURSES = "INSERT INTO courses (course_name, course_description) VALUES (?,?)";
     private static final String SQL_INSERT_STUDENT_COURSES = "INSERT INTO student_courses (student_id, course_id) VALUES (?,?)";
 
-    public DatabaseFiller(Random random, JdbcTemplate jdbcTemplate) {
-        this.random = random;
+    public DatabaseFiller(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

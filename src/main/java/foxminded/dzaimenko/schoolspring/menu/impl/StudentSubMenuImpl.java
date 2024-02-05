@@ -3,10 +3,11 @@ package foxminded.dzaimenko.schoolspring.menu.impl;
 import foxminded.dzaimenko.schoolspring.dao.StudentDAO;
 import foxminded.dzaimenko.schoolspring.menu.SubMenu;
 import foxminded.dzaimenko.schoolspring.model.Student;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Scanner;
-
+@Component
 public class StudentSubMenuImpl implements SubMenu {
     private final String STUDENT_MENU_REQUEST = """
             ______________________________________________________________
@@ -21,11 +22,10 @@ public class StudentSubMenuImpl implements SubMenu {
             8. Total number of students
             0. Return to Main Menu
             """;
-    private final Scanner scanner;
+    private final Scanner scanner = new Scanner(System.in);
     private final StudentDAO studentDAO;
 
-    public StudentSubMenuImpl(Scanner scanner, StudentDAO studentDAO) {
-        this.scanner = scanner;
+    public StudentSubMenuImpl(StudentDAO studentDAO) {
         this.studentDAO = studentDAO;
     }
 

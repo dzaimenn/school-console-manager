@@ -3,10 +3,11 @@ package foxminded.dzaimenko.schoolspring.menu.impl;
 import foxminded.dzaimenko.schoolspring.dao.GroupDAO;
 import foxminded.dzaimenko.schoolspring.menu.SubMenu;
 import foxminded.dzaimenko.schoolspring.model.Group;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Scanner;
-
+@Component
 public class GroupSubMenuImpl implements SubMenu {
     private final String GROUP_MENU_REQUEST = """
             ______________________________________________________________
@@ -18,11 +19,10 @@ public class GroupSubMenuImpl implements SubMenu {
             0. Return to Main Menu
             """;
 
-    private final Scanner scanner;
+    private final Scanner scanner = new Scanner(System.in);
     private final GroupDAO groupDAO;
 
-    public GroupSubMenuImpl(Scanner scanner, GroupDAO groupDAO) {
-        this.scanner = scanner;
+    public GroupSubMenuImpl(GroupDAO groupDAO) {
         this.groupDAO = groupDAO;
     }
 

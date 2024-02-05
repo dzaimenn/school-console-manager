@@ -7,16 +7,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Import;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
-
 @SpringBootApplication
 @Import(SpringConfig.class)
 public class SchoolSpringApplication {
 
     public static void main(String[] args) {
-
         ApplicationContext context = SpringApplication.run(SchoolSpringApplication.class, args);
 
         Flyway flyway = context.getBean(Flyway.class);
