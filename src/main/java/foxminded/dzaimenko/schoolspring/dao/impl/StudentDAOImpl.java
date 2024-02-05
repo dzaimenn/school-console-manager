@@ -12,6 +12,9 @@ import java.util.List;
 public class StudentDAOImpl implements StudentDAO {
 
     private final JdbcTemplate jdbcTemplate;
+
+    private static final String SQL_FIND_STUDENT_BY_ID = "SELECT * FROM students WHERE student_id = ?";
+
     private static final String SQL_FIND_STUDENTS_BY_COURSE = """
             SELECT students.student_id, students.first_name, students.last_name
             FROM students
@@ -51,6 +54,11 @@ public class StudentDAOImpl implements StudentDAO {
 
     public StudentDAOImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    @Override
+    public Student findStudentById(int studentId) {
+        return jdbcTemplate.queryForObject(SQL_FIND_STUDENT_BY_ID, new Object[]{studentId}, BeanPropertyRowMapper.newInstance(Student.class));
     }
 
     @Override
