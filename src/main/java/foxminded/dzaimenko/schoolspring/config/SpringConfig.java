@@ -7,10 +7,10 @@ import foxminded.dzaimenko.schoolspring.dao.StudentDAO;
 import foxminded.dzaimenko.schoolspring.dao.impl.CourseDAOImpl;
 import foxminded.dzaimenko.schoolspring.dao.impl.GroupDAOImpl;
 import foxminded.dzaimenko.schoolspring.dao.impl.StudentDAOImpl;
-import foxminded.dzaimenko.schoolspring.menu.CourseMenu;
-import foxminded.dzaimenko.schoolspring.menu.GroupMenu;
+import foxminded.dzaimenko.schoolspring.menu.impl.CourseSubMenuImpl;
+import foxminded.dzaimenko.schoolspring.menu.impl.GroupSubMenuImpl;
 import foxminded.dzaimenko.schoolspring.menu.MainMenu;
-import foxminded.dzaimenko.schoolspring.menu.StudentMenu;
+import foxminded.dzaimenko.schoolspring.menu.impl.StudentSubMenuImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -50,21 +50,6 @@ public class SpringConfig {
     }
 
     @Bean
-    public Scanner scanner() {
-        return new Scanner(System.in);
-    }
-
-    @Bean
-    public Random random() {
-        return new Random();
-    }
-
-    @Bean
-    public DatabaseFiller databaseFiller(Random random, JdbcTemplate jdbcTemplate) {
-        return new DatabaseFiller(random, jdbcTemplate);
-    }
-
-    @Bean
     public CourseDAO courseDAO(JdbcTemplate jdbcTemplate) {
         return new CourseDAOImpl(jdbcTemplate);
     }
@@ -77,26 +62,6 @@ public class SpringConfig {
     @Bean
     public StudentDAO studentDAO(JdbcTemplate jdbcTemplate) {
         return new StudentDAOImpl(jdbcTemplate);
-    }
-
-    @Bean
-    public StudentMenu studentMenu(Scanner scanner, StudentDAO studentDAO) {
-        return new StudentMenu(scanner, studentDAO);
-    }
-
-    @Bean
-    public GroupMenu groupMenu(Scanner scanner, GroupDAO groupDAO) {
-        return new GroupMenu(scanner, groupDAO);
-    }
-
-    @Bean
-    public CourseMenu courseMenu(Scanner scanner, CourseDAO courseDAO) {
-        return new CourseMenu(scanner, courseDAO);
-    }
-
-    @Bean
-    public MainMenu mainMenu(Scanner scanner, StudentMenu studentMenu, GroupMenu groupMenu, CourseMenu courseMenu) {
-        return new MainMenu(scanner, studentMenu, groupMenu, courseMenu);
     }
 
 }

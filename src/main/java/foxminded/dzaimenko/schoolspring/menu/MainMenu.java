@@ -1,5 +1,9 @@
 package foxminded.dzaimenko.schoolspring.menu;
 
+import foxminded.dzaimenko.schoolspring.menu.impl.GroupSubMenuImpl;
+import foxminded.dzaimenko.schoolspring.menu.impl.StudentSubMenuImpl;
+import foxminded.dzaimenko.schoolspring.menu.impl.CourseSubMenuImpl;
+
 import java.util.Scanner;
 
 public class MainMenu {
@@ -12,15 +16,15 @@ public class MainMenu {
             0. Exit
             """;
     private Scanner scanner;
-    private StudentMenu studentMenu;
-    private GroupMenu groupMenu;
-    private CourseMenu courseMenu;
+    private StudentSubMenuImpl studentSubMenuImpl;
+    private GroupSubMenuImpl groupSubMenuImpl;
+    private CourseSubMenuImpl courseSubMenuImpl;
 
-    public MainMenu(Scanner scanner, StudentMenu studentMenu, GroupMenu groupMenu, CourseMenu courseMenu) {
+    public MainMenu(Scanner scanner, StudentSubMenuImpl studentSubMenuImpl, GroupSubMenuImpl groupSubMenuImpl, CourseSubMenuImpl courseSubMenuImpl) {
         this.scanner = scanner;
-        this.studentMenu = studentMenu;
-        this.groupMenu = groupMenu;
-        this.courseMenu = courseMenu;
+        this.studentSubMenuImpl = studentSubMenuImpl;
+        this.groupSubMenuImpl = groupSubMenuImpl;
+        this.courseSubMenuImpl = courseSubMenuImpl;
     }
 
 }

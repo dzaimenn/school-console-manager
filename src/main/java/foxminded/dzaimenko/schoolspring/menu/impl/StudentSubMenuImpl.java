@@ -1,10 +1,11 @@
-package foxminded.dzaimenko.schoolspring.menu;
+package foxminded.dzaimenko.schoolspring.menu.impl;
 
 import foxminded.dzaimenko.schoolspring.dao.StudentDAO;
+import foxminded.dzaimenko.schoolspring.menu.SubMenu;
 
 import java.util.Scanner;
 
-public class StudentMenu {
+public class StudentSubMenuImpl implements SubMenu {
     private final String STUDENT_MENU_REQUEST = """
             ______________________________________________________________
             Please select an option (Enter the number):
@@ -19,7 +20,7 @@ public class StudentMenu {
     private Scanner scanner;
     private StudentDAO studentDAO;
 
-    public StudentMenu(Scanner scanner, StudentDAO studentDAO) {
+    public StudentSubMenuImpl(Scanner scanner, StudentDAO studentDAO) {
         this.scanner = scanner;
         this.studentDAO = studentDAO;
     }
