@@ -3,7 +3,7 @@ package foxminded.dzaimenko.schoolspring.menu;
 import org.springframework.stereotype.Component;
 
 import java.util.Scanner;
-@Component
+
 public class MainMenu {
     private final String MAIN_MENU_REQUEST = """
             ______________________________________________________________

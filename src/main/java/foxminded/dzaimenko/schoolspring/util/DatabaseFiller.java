@@ -1,6 +1,5 @@
 package foxminded.dzaimenko.schoolspring.util;
 
-import jakarta.annotation.PostConstruct;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -13,16 +12,15 @@ public class DatabaseFiller {
     private final Random random = new Random();
     private final JdbcTemplate jdbcTemplate;
 
-    private static final String SQL_INSERT_GROUPS = "INSERT INTO groups (group_name) VALUES (?)";
-    private static final String SQL_INSERT_STUDENTS = "INSERT INTO students (group_id, first_name, last_name) VALUES (?, ?, ?)";
-    private static final String SQL_INSERT_COURSES = "INSERT INTO courses (course_name, course_description) VALUES (?,?)";
-    private static final String SQL_INSERT_STUDENT_COURSES = "INSERT INTO student_courses (student_id, course_id) VALUES (?,?)";
+    private final String SQL_INSERT_GROUPS = "INSERT INTO groups (group_name) VALUES (?)";
+    private final String SQL_INSERT_STUDENTS = "INSERT INTO students (group_id, first_name, last_name) VALUES (?, ?, ?)";
+    private final String SQL_INSERT_COURSES = "INSERT INTO courses (course_name, course_description) VALUES (?,?)";
+    private final String SQL_INSERT_STUDENT_COURSES = "INSERT INTO student_courses (student_id, course_id) VALUES (?,?)";
 
     public DatabaseFiller(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @PostConstruct
     public void fillDataBase() {
         groupsTableFill();
         studentsTableFill();
