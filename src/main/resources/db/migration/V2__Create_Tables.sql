@@ -1,11 +1,3 @@
-GRANT ALL PRIVILEGES ON SCHEMA public TO school_manager;
-
-DROP TABLE IF EXISTS student_courses;
-DROP TABLE IF EXISTS groups;
-DROP TABLE IF EXISTS students;
-DROP TABLE IF EXISTS courses;
-
-
 CREATE TABLE groups
 (
     group_id   SERIAL PRIMARY KEY,
