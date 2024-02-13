@@ -39,22 +39,22 @@ public class JdbcGroupDao implements GroupDao {
     }
 
     @Override
-    public void createGroup(Group group) {
+    public void create(Group group) {
         jdbcTemplate.update(SQL_CREATE_GROUP, group.getGroupName());
     }
 
     @Override
-    public List<Group> getAllGroups() {
+    public List<Group> getAll() {
         return jdbcTemplate.query(SQL_SELECT_ALL_GROUPS, BeanPropertyRowMapper.newInstance(Group.class));
     }
 
     @Override
-    public void updateGroup(Group group) {
+    public void update(Group group) {
         jdbcTemplate.update(SQL_UPDATE_GROUP, group.getGroupId(), group.getGroupName());
     }
 
     @Override
-    public void deleteGroupById(int groupId) {
+    public void deleteById(int groupId) {
         jdbcTemplate.update(SQL_DELETE_GROUP_BY_ID, groupId);
     }
 

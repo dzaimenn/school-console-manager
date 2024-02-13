@@ -1,6 +1,7 @@
 package foxminded.dzaimenko.schoolspring.dao.impl;
 
 import foxminded.dzaimenko.schoolspring.dao.StudentDao;
+import foxminded.dzaimenko.schoolspring.model.Group;
 import foxminded.dzaimenko.schoolspring.model.Student;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -38,6 +39,8 @@ public class JdbcStudentDao implements StudentDao {
             WHERE student_id = ?;
             """;
 
+    private static final String SQL_UPDATE_STUDENT = "UPDATE students SET first_name = ?, last_name = ? WHERE student_id = ?";
+
     private static final String SQL_ADD_STUDENT_TO_COURSE = """
             INSERT INTO student_courses (student_id, course_id)
             VALUES (?, ?);
@@ -57,6 +60,11 @@ public class JdbcStudentDao implements StudentDao {
     }
 
     @Override
+    public void update(Student student) {
+        jdbcTemplate.update(SQL_UPDATE_STUDENT, student.getFirstName(), student.getLastName());
+    }
+
+    @Override
     public Student findStudentById(int studentId) {
         return jdbcTemplate.queryForObject(SQL_FIND_STUDENT_BY_ID, new Object[]{studentId}, BeanPropertyRowMapper.newInstance(Student.class));
     }
@@ -67,12 +75,12 @@ public class JdbcStudentDao implements StudentDao {
     }
 
     @Override
-    public void addNewStudent(String firstName, String lastName) {
-        jdbcTemplate.update(SQL_ADD_NEW_STUDENT, firstName, lastName);
+    public void create(Student student) {
+        jdbcTemplate.update(SQL_ADD_NEW_STUDENT, student.getFirstName(), student.getLastName());
     }
 
     @Override
-    public void deleteStudentById(int studentId) {
+    public void deleteById(int studentId) {
         jdbcTemplate.update(SQL_DELETE_STUDENT_BY_ID, studentId);
     }
 
@@ -86,7 +94,7 @@ public class JdbcStudentDao implements StudentDao {
         jdbcTemplate.update(SQL_REMOVE_STUDENT_FROM_COURSE, idStudentToRemoveFromCourse, idCourse);
     }
     @Override
-    public List<Student> getAllStudents() {
+    public List<Student> getAll() {
         return jdbcTemplate.query(SQL_SELECT_ALL_STUDENTS, BeanPropertyRowMapper.newInstance(Student.class));
     }
     @Override

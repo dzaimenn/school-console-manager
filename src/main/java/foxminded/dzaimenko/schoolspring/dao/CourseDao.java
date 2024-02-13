@@ -4,13 +4,6 @@ import foxminded.dzaimenko.schoolspring.model.Course;
 
 import java.util.List;
 
-public interface CourseDao {
+public interface CourseDao extends BaseDao<Course> {
 
-    void createCourse(Course course);
-
-    List<Course> getAllCourses();
-
-    void updateCourse(Course course);
-
-    void deleteCourseById(int courseId);
 }

@@ -2,6 +2,7 @@ package foxminded.dzaimenko.schoolspring.menu.impl;
 
 import foxminded.dzaimenko.schoolspring.dao.StudentDao;
 import foxminded.dzaimenko.schoolspring.menu.SubMenu;
+import foxminded.dzaimenko.schoolspring.model.Course;
 import foxminded.dzaimenko.schoolspring.model.Student;
 import org.springframework.stereotype.Component;
 
@@ -13,13 +14,15 @@ public class StudentSubMenuImpl implements SubMenu {
             ______________________________________________________________
             Please select an option (Enter the number):
             1. Show all students
-            2. Find students by ID
-            3. Find students related to a course
-            4. Add a new student
-            5. Delete a student by ID
-            6. Add a student to a course
-            7. Remove a student from a course
-            8. Total number of students
+            2. Create a new student
+            3. Update student information
+            4. Delete a student by ID
+            5. Find students by ID
+            6. Find students related to a course
+            7. Add a student to a course
+            8. Remove a student from a course
+            9. Total number of students
+            
             0. Return to Main Menu
             """;
     private final Scanner scanner = new Scanner(System.in);
@@ -60,6 +63,9 @@ public class StudentSubMenuImpl implements SubMenu {
                 case 8:
                     showTotalNumberOfStudents();
                     break;
+                case 9:
+                    showTotalNumberOfStudents();
+                    break;
                 case 0:
                     return;
                 default:
@@ -69,7 +75,7 @@ public class StudentSubMenuImpl implements SubMenu {
     }
 
     private void showAllStudents() {
-        List<Student> students = studentDAO.getAllStudents();
+        List<Student> students = studentDAO.getAll();
         for (Student student : students) {
             System.out.println(student);
         }
@@ -100,15 +106,42 @@ public class StudentSubMenuImpl implements SubMenu {
         System.out.println("Enter the last name of the student:");
         String lastName = scanner.nextLine();
 
-        studentDAO.addNewStudent(firstName, lastName);
+        Student student = Student.builder()
+                .firstName(firstName)
+                .lastName(lastName)
+                .build();
+
+        studentDAO.create(student);
         System.out.println("Student added successfully.");
+    }
+
+    private void updateStudent() {
+        System.out.println("Enter the ID of the student you want to update:");
+        int studentId = scanner.nextInt();
+        scanner.nextLine();
+
+        System.out.println("Enter the new firstname of the student:");
+        String newFirstName = scanner.nextLine();
+
+        System.out.println("Enter the new lastname of the student:");
+        String newLastName = scanner.nextLine();
+
+        Student updatedStudent = Student.builder()
+                .studentId(studentId)
+                .firstName(newFirstName)
+                .lastName(newLastName)
+                .build();
+
+        studentDAO.update(updatedStudent);
+
+        System.out.println("Student information updated successfully.");
     }
 
     private void deleteStudentById() {
         System.out.println("Enter the ID of the student to delete:");
         int id = scanner.nextInt();
 
-        studentDAO.deleteStudentById(id);
+        studentDAO.deleteById(id);
         System.out.println("Student deleted successfully.");
     }
 

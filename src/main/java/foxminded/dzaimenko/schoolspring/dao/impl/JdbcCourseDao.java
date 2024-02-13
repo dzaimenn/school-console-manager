@@ -23,22 +23,22 @@ public class JdbcCourseDao implements CourseDao {
     }
 
     @Override
-    public void createCourse(Course course) {
+    public void create(Course course) {
         jdbcTemplate.update(SQL_INSERT_COURSE, course.getCourseName(), course.getCourseDescription());
     }
 
     @Override
-    public List<Course> getAllCourses() {
+    public List<Course> getAll() {
         return jdbcTemplate.query(SQL_SELECT_ALL_COURSES, BeanPropertyRowMapper.newInstance(Course.class));
     }
 
     @Override
-    public void updateCourse(Course course) {
+    public void update(Course course) {
         jdbcTemplate.update(SQL_UPDATE_COURSE, course.getCourseName(), course.getCourseDescription(), course.getCourseId());
     }
 
     @Override
-    public void deleteCourseById(int courseId) {
+    public void deleteById(int courseId) {
         jdbcTemplate.update(SQL_DELETE_COURSE_BY_ID, courseId);
     }
 

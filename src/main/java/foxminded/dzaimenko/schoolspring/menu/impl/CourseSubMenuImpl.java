@@ -16,6 +16,7 @@ public class CourseSubMenuImpl implements SubMenu {
             2. Create a new course
             3. Update course information
             4. Delete a course by ID
+            
             0. Return to Main Menu
             """;
 
@@ -54,7 +55,7 @@ public class CourseSubMenuImpl implements SubMenu {
     }
 
     private void showAllCourses() {
-        List<Course> courses = courseDAO.getAllCourses();
+        List<Course> courses = courseDAO.getAll();
         for (Course course : courses) {
             System.out.println(course);
         }
@@ -72,7 +73,7 @@ public class CourseSubMenuImpl implements SubMenu {
                 .courseDescription(description)
                 .build();
 
-        courseDAO.createCourse(newCourse);
+        courseDAO.create(newCourse);
 
         System.out.println("New course created successfully.");
     }
@@ -94,7 +95,7 @@ public class CourseSubMenuImpl implements SubMenu {
                 .courseDescription(newDescription)
                 .build();
 
-        courseDAO.updateCourse(updatedCourse);
+        courseDAO.update(updatedCourse);
 
         System.out.println("Course information updated successfully.");
     }
@@ -104,7 +105,7 @@ public class CourseSubMenuImpl implements SubMenu {
         int courseId = scanner.nextInt();
         scanner.nextLine();
 
-        courseDAO.deleteCourseById(courseId);
+        courseDAO.deleteById(courseId);
 
         System.out.println("Course with ID " + courseId + " deleted successfully.");
     }

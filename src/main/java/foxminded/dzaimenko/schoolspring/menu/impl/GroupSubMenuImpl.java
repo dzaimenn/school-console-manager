@@ -3,6 +3,7 @@ package foxminded.dzaimenko.schoolspring.menu.impl;
 import foxminded.dzaimenko.schoolspring.dao.GroupDao;
 import foxminded.dzaimenko.schoolspring.menu.SubMenu;
 import foxminded.dzaimenko.schoolspring.model.Group;
+import foxminded.dzaimenko.schoolspring.model.Student;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -12,10 +13,12 @@ public class GroupSubMenuImpl implements SubMenu {
     private final String GROUP_MENU_REQUEST = """
             ______________________________________________________________
             Please select an option (Enter the number):
-            1. Find groups with less or equal students’ number
+            1. Show all groups
             2. Create a new group
             3. Update group information
             4. Delete a group by ID
+            5. Find groups with less or equal students’ number
+            
             0. Return to Main Menu
             """;
 
@@ -34,7 +37,7 @@ public class GroupSubMenuImpl implements SubMenu {
 
             switch (choice) {
                 case 1:
-                    findGroupsWithMaxStudentCount();
+                    showAllGroups();
                     break;
                 case 2:
                     createNewGroup();
@@ -44,6 +47,9 @@ public class GroupSubMenuImpl implements SubMenu {
                     break;
                 case 4:
                     deleteGroupById();
+                    break;
+                case 5:
+                    findGroupsWithMaxStudentCount();
                     break;
                 case 0:
                     return;
@@ -70,6 +76,13 @@ public class GroupSubMenuImpl implements SubMenu {
         }
     }
 
+    private void showAllGroups() {
+        List<Group> groups = groupDAO.getAll();
+        for (Group group : groups) {
+            System.out.println(group);
+        }
+    }
+
     private void createNewGroup() {
         System.out.println("Enter the name of the new group:");
         String groupName = scanner.nextLine();
@@ -78,7 +91,7 @@ public class GroupSubMenuImpl implements SubMenu {
                 .groupName(groupName)
                 .build();
 
-        groupDAO.createGroup(newGroup);
+        groupDAO.create(newGroup);
         System.out.println("New group created successfully.");
     }
 
@@ -95,7 +108,7 @@ public class GroupSubMenuImpl implements SubMenu {
                 .groupName(newGroupName)
                 .build();
 
-        groupDAO.updateGroup(updatedGroup);
+        groupDAO.update(updatedGroup);
         System.out.println("Group information updated successfully.");
     }
 
@@ -104,7 +117,7 @@ public class GroupSubMenuImpl implements SubMenu {
         int groupId = scanner.nextInt();
         scanner.nextLine();
 
-        groupDAO.deleteGroupById(groupId);
+        groupDAO.deleteById(groupId);
         System.out.println("Group deleted successfully.");
     }
 
