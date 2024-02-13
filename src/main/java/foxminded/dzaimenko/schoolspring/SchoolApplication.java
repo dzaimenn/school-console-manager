@@ -1,6 +1,5 @@
 package foxminded.dzaimenko.schoolspring;
 
-import foxminded.dzaimenko.schoolspring.config.JdbcConfig;
 import foxminded.dzaimenko.schoolspring.dao.CourseDao;
 import foxminded.dzaimenko.schoolspring.dao.GroupDao;
 import foxminded.dzaimenko.schoolspring.dao.StudentDao;
@@ -14,11 +13,9 @@ import org.flywaydb.core.Flyway;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @SpringBootApplication
-@Import(JdbcConfig.class)
 public class SchoolApplication {
 
     public static void main(String[] args) {
