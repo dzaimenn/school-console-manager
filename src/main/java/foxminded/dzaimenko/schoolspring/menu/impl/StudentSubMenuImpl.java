@@ -2,7 +2,6 @@ package foxminded.dzaimenko.schoolspring.menu.impl;
 
 import foxminded.dzaimenko.schoolspring.dao.StudentDao;
 import foxminded.dzaimenko.schoolspring.menu.SubMenu;
-import foxminded.dzaimenko.schoolspring.model.Course;
 import foxminded.dzaimenko.schoolspring.model.Student;
 import org.springframework.stereotype.Component;
 
@@ -43,25 +42,25 @@ public class StudentSubMenuImpl implements SubMenu {
                     showAllStudents();
                     break;
                 case 2:
-                    findStudentById();
+                    createNewStudent();
                     break;
                 case 3:
-                    findStudentsByCourse();
+                    updateStudent();
                     break;
                 case 4:
-                    addNewStudent();
-                    break;
-                case 5:
                     deleteStudentById();
                     break;
+                case 5:
+                    findStudentById();
+                    break;
                 case 6:
-                    addStudentToCourse();
+                    findStudentsByCourse();
                     break;
                 case 7:
-                    removeStudentFromCourse();
+                    addStudentToCourse();
                     break;
                 case 8:
-                    showTotalNumberOfStudents();
+                    removeStudentFromCourse();
                     break;
                 case 9:
                     showTotalNumberOfStudents();
@@ -99,7 +98,7 @@ public class StudentSubMenuImpl implements SubMenu {
         }
     }
 
-    private void addNewStudent() {
+    private void createNewStudent() {
         System.out.println("Enter the first name of the student:");
         String firstName = scanner.nextLine();
 
