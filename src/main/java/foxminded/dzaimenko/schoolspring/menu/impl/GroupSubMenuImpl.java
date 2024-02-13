@@ -3,11 +3,11 @@ package foxminded.dzaimenko.schoolspring.menu.impl;
 import foxminded.dzaimenko.schoolspring.dao.GroupDao;
 import foxminded.dzaimenko.schoolspring.menu.SubMenu;
 import foxminded.dzaimenko.schoolspring.model.Group;
-import foxminded.dzaimenko.schoolspring.model.Student;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Scanner;
+
 @Component
 public class GroupSubMenuImpl implements SubMenu {
     private final String GROUP_MENU_REQUEST = """
@@ -18,7 +18,7 @@ public class GroupSubMenuImpl implements SubMenu {
             3. Update group information
             4. Delete a group by ID
             5. Find groups with less or equal students’ number
-            
+                        
             0. Return to Main Menu
             """;
 
@@ -55,23 +55,6 @@ public class GroupSubMenuImpl implements SubMenu {
                     return;
                 default:
                     System.out.println("Invalid option. Please enter a valid number:");
-            }
-        }
-    }
-
-    private void findGroupsWithMaxStudentCount() {
-        System.out.println("Enter the maximum number of students:");
-        int maxStudentCount = scanner.nextInt();
-        scanner.nextLine();
-
-        List<Group> groups = groupDAO.findGroupsWithMaxStudentCount(maxStudentCount);
-
-        if (groups.isEmpty()) {
-            System.out.println("No groups found with less or equal students' number.");
-        } else {
-            System.out.println("Groups with less or equal students' number:");
-            for (Group group : groups) {
-                System.out.println(group);
             }
         }
     }
@@ -119,6 +102,23 @@ public class GroupSubMenuImpl implements SubMenu {
 
         groupDAO.deleteById(groupId);
         System.out.println("Group deleted successfully.");
+    }
+
+    private void findGroupsWithMaxStudentCount() {
+        System.out.println("Enter the maximum number of students:");
+        int maxStudentCount = scanner.nextInt();
+        scanner.nextLine();
+
+        List<Group> groups = groupDAO.findGroupsWithMaxStudentCount(maxStudentCount);
+
+        if (groups.isEmpty()) {
+            System.out.println("No groups found with less or equal students' number.");
+        } else {
+            System.out.println("Groups with less or equal students' number:");
+            for (Group group : groups) {
+                System.out.println(group);
+            }
+        }
     }
 
 }

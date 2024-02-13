@@ -13,6 +13,18 @@ public class JdbcGroupDao implements GroupDao {
 
     private final JdbcTemplate jdbcTemplate;
 
+    public JdbcGroupDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    private static final String SQL_SELECT_ALL_GROUPS = "SELECT * FROM groups";
+
+    private static final String SQL_CREATE_GROUP = "INSERT INTO groups (group_name) VALUES (?)";
+
+    private static final String SQL_UPDATE_GROUP = "UPDATE groups SET group_name = ? WHERE group_id = ?";
+
+    private static final String SQL_DELETE_GROUP_BY_ID = "DELETE FROM groups WHERE group_id = ?";
+
     private static final String SQL_FIND_GROUPS_WITH_MAX_STUDENT_COUNT = """
             SELECT g.group_id, g.group_name, COUNT(s.student_id) as student_count
             FROM groups g
@@ -21,31 +33,14 @@ public class JdbcGroupDao implements GroupDao {
             HAVING COUNT(s.student_id) <= ?
             """;
 
-    private static final String SQL_CREATE_GROUP = "INSERT INTO groups (group_name) VALUES (?)";
-
-    private static final String SQL_SELECT_ALL_GROUPS = "SELECT * FROM groups";
-
-    private static final String SQL_UPDATE_GROUP = "UPDATE groups SET group_name = ? WHERE group_id = ?";
-
-    private static final String SQL_DELETE_GROUP_BY_ID = "DELETE FROM groups WHERE group_id = ?";
-
-    public JdbcGroupDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
     @Override
-    public List<Group> findGroupsWithMaxStudentCount(int maxStudentCount) {
-        return jdbcTemplate.query(SQL_FIND_GROUPS_WITH_MAX_STUDENT_COUNT, new Object[]{maxStudentCount}, new BeanPropertyRowMapper<>(Group.class));
+    public List<Group> getAll() {
+        return jdbcTemplate.query(SQL_SELECT_ALL_GROUPS, BeanPropertyRowMapper.newInstance(Group.class));
     }
 
     @Override
     public void create(Group group) {
         jdbcTemplate.update(SQL_CREATE_GROUP, group.getGroupName());
-    }
-
-    @Override
-    public List<Group> getAll() {
-        return jdbcTemplate.query(SQL_SELECT_ALL_GROUPS, BeanPropertyRowMapper.newInstance(Group.class));
     }
 
     @Override
@@ -56,6 +51,11 @@ public class JdbcGroupDao implements GroupDao {
     @Override
     public void deleteById(int groupId) {
         jdbcTemplate.update(SQL_DELETE_GROUP_BY_ID, groupId);
+    }
+
+    @Override
+    public List<Group> findGroupsWithMaxStudentCount(int maxStudentCount) {
+        return jdbcTemplate.query(SQL_FIND_GROUPS_WITH_MAX_STUDENT_COUNT, new Object[]{maxStudentCount}, new BeanPropertyRowMapper<>(Group.class));
     }
 
 }

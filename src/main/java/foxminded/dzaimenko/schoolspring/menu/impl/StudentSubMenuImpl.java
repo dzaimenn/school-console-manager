@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Scanner;
+
 @Component
 public class StudentSubMenuImpl implements SubMenu {
     private final String STUDENT_MENU_REQUEST = """
@@ -21,7 +22,7 @@ public class StudentSubMenuImpl implements SubMenu {
             7. Add a student to a course
             8. Remove a student from a course
             9. Total number of students
-            
+                        
             0. Return to Main Menu
             """;
     private final Scanner scanner = new Scanner(System.in);
@@ -80,24 +81,6 @@ public class StudentSubMenuImpl implements SubMenu {
         }
     }
 
-    private void findStudentById() {
-        System.out.println("Enter the ID of the student:");
-        int id = scanner.nextInt();
-
-        Student student = studentDAO.findStudentById(id);
-        System.out.println(student != null ? student : "Student not found.");
-    }
-
-    private void findStudentsByCourse() {
-        System.out.println("Enter the name of the course:");
-        String courseName = scanner.nextLine();
-
-        List<Student> students = studentDAO.findStudentsByCourseName(courseName);
-        for (Student student : students) {
-            System.out.println(student);
-        }
-    }
-
     private void createNewStudent() {
         System.out.println("Enter the first name of the student:");
         String firstName = scanner.nextLine();
@@ -142,6 +125,24 @@ public class StudentSubMenuImpl implements SubMenu {
 
         studentDAO.deleteById(id);
         System.out.println("Student deleted successfully.");
+    }
+
+    private void findStudentById() {
+        System.out.println("Enter the ID of the student:");
+        int id = scanner.nextInt();
+
+        Student student = studentDAO.findStudentById(id);
+        System.out.println(student != null ? student : "Student not found.");
+    }
+
+    private void findStudentsByCourse() {
+        System.out.println("Enter the name of the course:");
+        String courseName = scanner.nextLine();
+
+        List<Student> students = studentDAO.findStudentsByCourseName(courseName);
+        for (Student student : students) {
+            System.out.println(student);
+        }
     }
 
     private void addStudentToCourse() {

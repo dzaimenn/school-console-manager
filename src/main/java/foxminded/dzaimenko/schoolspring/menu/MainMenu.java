@@ -1,16 +1,15 @@
 package foxminded.dzaimenko.schoolspring.menu;
 
-import org.springframework.stereotype.Component;
-
 import java.util.Scanner;
 
 public class MainMenu {
     private final String MAIN_MENU_REQUEST = """
             ______________________________________________________________
             Please select an option (Enter the number):
-            1. Manage Student information
-            2. Manage Group information
-            3. Manage Course information
+            1. Manage Students
+            2. Manage Groups
+            3. Manage Courses
+            
             0. Exit
             """;
     private final Scanner scanner = new Scanner(System.in);

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Scanner;
+
 @Component
 public class CourseSubMenuImpl implements SubMenu {
     private final String COURSE_MENU_REQUEST = """
@@ -16,7 +17,7 @@ public class CourseSubMenuImpl implements SubMenu {
             2. Create a new course
             3. Update course information
             4. Delete a course by ID
-            
+                        
             0. Return to Main Menu
             """;
 
@@ -44,7 +45,7 @@ public class CourseSubMenuImpl implements SubMenu {
                     updateCourse();
                     break;
                 case 4:
-                    deleteCourse();
+                    deleteCourseById();
                     break;
                 case 0:
                     return;
@@ -100,7 +101,7 @@ public class CourseSubMenuImpl implements SubMenu {
         System.out.println("Course information updated successfully.");
     }
 
-    private void deleteCourse() {
+    private void deleteCourseById() {
         System.out.println("Enter the ID of the course you want to delete:");
         int courseId = scanner.nextInt();
         scanner.nextLine();
