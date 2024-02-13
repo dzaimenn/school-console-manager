@@ -1,6 +1,6 @@
 package foxminded.dzaimenko.schoolspring.dao.impl;
 
-import foxminded.dzaimenko.schoolspring.dao.GroupDAO;
+import foxminded.dzaimenko.schoolspring.dao.GroupDao;
 import foxminded.dzaimenko.schoolspring.model.Group;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class GroupDAOImpl implements GroupDAO {
+public class JdbcGroupDao implements GroupDao {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -29,7 +29,7 @@ public class GroupDAOImpl implements GroupDAO {
 
     private static final String SQL_DELETE_GROUP_BY_ID = "DELETE FROM groups WHERE group_id = ?";
 
-    public GroupDAOImpl(JdbcTemplate jdbcTemplate) {
+    public JdbcGroupDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

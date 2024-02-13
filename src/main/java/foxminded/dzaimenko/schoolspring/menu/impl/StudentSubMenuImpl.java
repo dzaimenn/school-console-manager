@@ -1,6 +1,6 @@
 package foxminded.dzaimenko.schoolspring.menu.impl;
 
-import foxminded.dzaimenko.schoolspring.dao.StudentDAO;
+import foxminded.dzaimenko.schoolspring.dao.StudentDao;
 import foxminded.dzaimenko.schoolspring.menu.SubMenu;
 import foxminded.dzaimenko.schoolspring.model.Student;
 import org.springframework.stereotype.Component;
@@ -23,9 +23,9 @@ public class StudentSubMenuImpl implements SubMenu {
             0. Return to Main Menu
             """;
     private final Scanner scanner = new Scanner(System.in);
-    private final StudentDAO studentDAO;
+    private final StudentDao studentDAO;
 
-    public StudentSubMenuImpl(StudentDAO studentDAO) {
+    public StudentSubMenuImpl(StudentDao studentDAO) {
         this.studentDAO = studentDAO;
     }
 

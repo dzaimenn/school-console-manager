@@ -1,9 +1,9 @@
 package foxminded.dzaimenko.schoolspring;
 
-import foxminded.dzaimenko.schoolspring.config.SpringConfig;
-import foxminded.dzaimenko.schoolspring.dao.CourseDAO;
-import foxminded.dzaimenko.schoolspring.dao.GroupDAO;
-import foxminded.dzaimenko.schoolspring.dao.StudentDAO;
+import foxminded.dzaimenko.schoolspring.config.JdbcConfig;
+import foxminded.dzaimenko.schoolspring.dao.CourseDao;
+import foxminded.dzaimenko.schoolspring.dao.GroupDao;
+import foxminded.dzaimenko.schoolspring.dao.StudentDao;
 import foxminded.dzaimenko.schoolspring.menu.MainMenu;
 import foxminded.dzaimenko.schoolspring.menu.SubMenu;
 import foxminded.dzaimenko.schoolspring.menu.impl.CourseSubMenuImpl;
@@ -18,24 +18,25 @@ import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @SpringBootApplication
-@Import(SpringConfig.class)
-public class SchoolSpringApplication {
+@Import(JdbcConfig.class)
+public class SchoolApplication {
 
     public static void main(String[] args) {
-        ApplicationContext context = SpringApplication.run(SchoolSpringApplication.class, args);
+        ApplicationContext context = SpringApplication.run(SchoolApplication.class, args);
 
         Flyway flyway = context.getBean(Flyway.class);
+        flyway.clean();
         flyway.migrate();
 
         JdbcTemplate jdbcTemplate = context.getBean(JdbcTemplate.class);
         DatabaseFiller databaseFiller = new DatabaseFiller(jdbcTemplate);
         databaseFiller.fillDataBase();
 
-        SubMenu courseSubMenu = new CourseSubMenuImpl(context.getBean(CourseDAO.class));
-        SubMenu groupSubMenu = new GroupSubMenuImpl(context.getBean(GroupDAO.class));
-        SubMenu studentSubMenu = new StudentSubMenuImpl(context.getBean(StudentDAO.class));
+        SubMenu studentSubMenu = new StudentSubMenuImpl(context.getBean(StudentDao.class));
+        SubMenu groupSubMenu = new GroupSubMenuImpl(context.getBean(GroupDao.class));
+        SubMenu courseSubMenu = new CourseSubMenuImpl(context.getBean(CourseDao.class));
 
-        MainMenu mainMenu = new MainMenu(courseSubMenu, groupSubMenu, studentSubMenu);
+        MainMenu mainMenu = new MainMenu(studentSubMenu, groupSubMenu, courseSubMenu);
         mainMenu.displayMainMenu();
 
     }

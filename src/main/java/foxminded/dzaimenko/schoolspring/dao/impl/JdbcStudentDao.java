@@ -1,6 +1,6 @@
 package foxminded.dzaimenko.schoolspring.dao.impl;
 
-import foxminded.dzaimenko.schoolspring.dao.StudentDAO;
+import foxminded.dzaimenko.schoolspring.dao.StudentDao;
 import foxminded.dzaimenko.schoolspring.model.Student;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class StudentDAOImpl implements StudentDAO {
+public class JdbcStudentDao implements StudentDao {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -52,7 +52,7 @@ public class StudentDAOImpl implements StudentDAO {
 
     private static final String SQL_GET_NUMBER_OF_STUDENTS = "SELECT COUNT(*) AS total_students FROM students";
 
-    public StudentDAOImpl(JdbcTemplate jdbcTemplate) {
+    public JdbcStudentDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

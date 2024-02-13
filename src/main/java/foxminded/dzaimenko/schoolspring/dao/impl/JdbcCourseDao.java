@@ -1,15 +1,15 @@
 package foxminded.dzaimenko.schoolspring.dao.impl;
 
-import foxminded.dzaimenko.schoolspring.dao.CourseDAO;
+import foxminded.dzaimenko.schoolspring.dao.CourseDao;
 import foxminded.dzaimenko.schoolspring.model.Course;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Component
-public class CourseDAOImpl implements CourseDAO {
+@Repository
+public class JdbcCourseDao implements CourseDao {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -18,7 +18,7 @@ public class CourseDAOImpl implements CourseDAO {
     private static final String SQL_UPDATE_COURSE = "UPDATE courses SET course_name = ?, course_description = ? WHERE course_id = ?";
     private static final String SQL_DELETE_COURSE_BY_ID = "DELETE FROM courses WHERE course_id = ?";
 
-    public CourseDAOImpl(JdbcTemplate jdbcTemplate) {
+    public JdbcCourseDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

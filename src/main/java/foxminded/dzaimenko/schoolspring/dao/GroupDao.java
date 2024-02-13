@@ -4,7 +4,7 @@ import foxminded.dzaimenko.schoolspring.model.Group;
 
 import java.util.List;
 
-public interface GroupDAO {
+public interface GroupDao {
 
     List<Group> findGroupsWithMaxStudentCount(int maxStudentCount);
 

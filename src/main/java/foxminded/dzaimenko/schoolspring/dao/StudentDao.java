@@ -4,7 +4,7 @@ import foxminded.dzaimenko.schoolspring.model.Student;
 
 import java.util.List;
 
-public interface StudentDAO {
+public interface StudentDao {
 
     Student findStudentById(int studentId);
 

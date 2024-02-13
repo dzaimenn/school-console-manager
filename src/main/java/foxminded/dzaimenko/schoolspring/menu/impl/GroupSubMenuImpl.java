@@ -1,6 +1,6 @@
 package foxminded.dzaimenko.schoolspring.menu.impl;
 
-import foxminded.dzaimenko.schoolspring.dao.GroupDAO;
+import foxminded.dzaimenko.schoolspring.dao.GroupDao;
 import foxminded.dzaimenko.schoolspring.menu.SubMenu;
 import foxminded.dzaimenko.schoolspring.model.Group;
 import org.springframework.stereotype.Component;
@@ -20,9 +20,9 @@ public class GroupSubMenuImpl implements SubMenu {
             """;
 
     private final Scanner scanner = new Scanner(System.in);
-    private final GroupDAO groupDAO;
+    private final GroupDao groupDAO;
 
-    public GroupSubMenuImpl(GroupDAO groupDAO) {
+    public GroupSubMenuImpl(GroupDao groupDAO) {
         this.groupDAO = groupDAO;
     }
 

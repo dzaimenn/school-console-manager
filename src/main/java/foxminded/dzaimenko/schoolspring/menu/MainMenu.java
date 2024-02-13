@@ -13,10 +13,10 @@ public class MainMenu {
             3. Manage Course information
             0. Exit
             """;
-    private Scanner scanner = new Scanner(System.in);
-    private SubMenu studentSubMenu;
-    private SubMenu groupSubMenu;
-    private SubMenu courseSubMenu;
+    private final Scanner scanner = new Scanner(System.in);
+    private final SubMenu studentSubMenu;
+    private final SubMenu groupSubMenu;
+    private final SubMenu courseSubMenu;
 
     public MainMenu(SubMenu studentSubMenu, SubMenu groupSubMenu, SubMenu courseSubMenu) {
         this.studentSubMenu = studentSubMenu;
@@ -42,7 +42,7 @@ public class MainMenu {
                     break;
                 case 0:
                     System.out.println("Exiting the program.");
-                    break;
+                    return;
                 default:
                     System.out.println("Invalid option. Please enter a valid number:");
             }

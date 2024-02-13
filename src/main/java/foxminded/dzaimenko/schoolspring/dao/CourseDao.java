@@ -4,7 +4,7 @@ import foxminded.dzaimenko.schoolspring.model.Course;
 
 import java.util.List;
 
-public interface CourseDAO {
+public interface CourseDao {
 
     void createCourse(Course course);
 
