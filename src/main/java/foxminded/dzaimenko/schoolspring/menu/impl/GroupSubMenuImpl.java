@@ -62,7 +62,7 @@ public class GroupSubMenuImpl implements SubMenu {
     private void showAllGroups() {
         List<Group> groups = groupDAO.getAll();
         for (Group group : groups) {
-            System.out.println(group);
+            System.out.println(group.getGroupId() + ". " + group.getGroupName());
         }
     }
 

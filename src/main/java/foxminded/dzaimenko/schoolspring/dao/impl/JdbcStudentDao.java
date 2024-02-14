@@ -70,12 +70,12 @@ public class JdbcStudentDao implements StudentDao {
 
     @Override
     public void update(Student student) {
-        jdbcTemplate.update(SQL_UPDATE_STUDENT, student.getFirstName(), student.getLastName());
+        jdbcTemplate.update(SQL_UPDATE_STUDENT, student.getFirstName(), student.getLastName(), student.getStudentId());
     }
 
     @Override
     public void deleteById(int studentId) {
-        jdbcTemplate.update(SQL_DELETE_STUDENT_BY_ID, studentId);
+        jdbcTemplate.update(SQL_DELETE_STUDENT_BY_ID, studentId, studentId);
     }
 
     @Override

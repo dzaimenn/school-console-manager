@@ -1,12 +1,12 @@
 package foxminded.dzaimenko.schoolspring.model;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Builder
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Student {
 
     private int studentId;

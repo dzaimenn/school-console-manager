@@ -77,7 +77,7 @@ public class StudentSubMenuImpl implements SubMenu {
     private void showAllStudents() {
         List<Student> students = studentDAO.getAll();
         for (Student student : students) {
-            System.out.println(student);
+            System.out.println(student.getStudentId() + ". " + student.getFirstName() + " " + student.getLastName());
         }
     }
 

@@ -25,6 +25,8 @@ public class JdbcCourseDao implements CourseDao {
 
     private static final String SQL_DELETE_COURSE_BY_ID = "DELETE FROM courses WHERE course_id = ?";
 
+    private static final String SQL_DELETE_STUDENT_COURSE_BY_ID = "DELETE FROM student_courses WHERE course_id = ?";
+
     @Override
     public List<Course> getAll() {
         return jdbcTemplate.query(SQL_SELECT_ALL_COURSES, BeanPropertyRowMapper.newInstance(Course.class));
@@ -42,6 +44,7 @@ public class JdbcCourseDao implements CourseDao {
 
     @Override
     public void deleteById(int courseId) {
+        jdbcTemplate.update(SQL_DELETE_STUDENT_COURSE_BY_ID, courseId);
         jdbcTemplate.update(SQL_DELETE_COURSE_BY_ID, courseId);
     }
 

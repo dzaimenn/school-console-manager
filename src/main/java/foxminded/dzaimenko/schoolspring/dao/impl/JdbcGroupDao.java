@@ -45,7 +45,7 @@ public class JdbcGroupDao implements GroupDao {
 
     @Override
     public void update(Group group) {
-        jdbcTemplate.update(SQL_UPDATE_GROUP, group.getGroupId(), group.getGroupName());
+        jdbcTemplate.update(SQL_UPDATE_GROUP, group.getGroupName(), group.getGroupId());
     }
 
     @Override

@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/school_db
+    username: school_manager
+    password: 1234
+
+  flyway:
+    user: school_manager
+    password: 1234
+    schemas: public
+    url: jdbc:postgresql://localhost:5432/school_db
+    locations: classpath:db/migration
+    clean-disabled: false

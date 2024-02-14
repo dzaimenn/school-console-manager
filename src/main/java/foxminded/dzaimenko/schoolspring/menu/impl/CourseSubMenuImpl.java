@@ -58,7 +58,7 @@ public class CourseSubMenuImpl implements SubMenu {
     private void showAllCourses() {
         List<Course> courses = courseDAO.getAll();
         for (Course course : courses) {
-            System.out.println(course);
+            System.out.println(course.getCourseId() + ". " + course.getCourseName());
         }
     }
 
