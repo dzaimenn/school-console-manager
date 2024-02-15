@@ -1,6 +1,7 @@
 package foxminded.dzaimenko.schoolspring.dao.impl;
 
 import foxminded.dzaimenko.schoolspring.dao.StudentDao;
+import foxminded.dzaimenko.schoolspring.dao.rowmapper.StudentRowMapper;
 import foxminded.dzaimenko.schoolspring.model.Student;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -60,7 +61,7 @@ public class JdbcStudentDao implements StudentDao {
 
     @Override
     public List<Student> getAll() {
-        return jdbcTemplate.query(SQL_SELECT_ALL_STUDENTS, BeanPropertyRowMapper.newInstance(Student.class));
+        return jdbcTemplate.query(SQL_SELECT_ALL_STUDENTS, new StudentRowMapper());
     }
 
     @Override
@@ -80,12 +81,12 @@ public class JdbcStudentDao implements StudentDao {
 
     @Override
     public Student findStudentById(int studentId) {
-        return jdbcTemplate.queryForObject(SQL_FIND_STUDENT_BY_ID, new Object[]{studentId}, BeanPropertyRowMapper.newInstance(Student.class));
+        return jdbcTemplate.queryForObject(SQL_FIND_STUDENT_BY_ID, new Object[]{studentId}, new StudentRowMapper());
     }
 
     @Override
     public List<Student> findStudentsByCourseName(String course) {
-        return jdbcTemplate.query(SQL_FIND_STUDENTS_BY_COURSE, new Object[]{course}, new BeanPropertyRowMapper<>(Student.class));
+        return jdbcTemplate.query(SQL_FIND_STUDENTS_BY_COURSE, new Object[]{course}, new StudentRowMapper());
     }
 
     @Override
