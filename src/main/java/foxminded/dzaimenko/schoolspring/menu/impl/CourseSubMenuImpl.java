@@ -6,6 +6,7 @@ import foxminded.dzaimenko.schoolspring.model.Course;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 @Component
@@ -16,7 +17,8 @@ public class CourseSubMenuImpl implements SubMenu {
             1. Show all courses
             2. Create a new course
             3. Update course information
-            4. Delete a course by ID
+            4. Find a course by ID
+            5. Delete a course by ID
                         
             0. Return to Main Menu
             """;
@@ -45,6 +47,9 @@ public class CourseSubMenuImpl implements SubMenu {
                     updateCourse();
                     break;
                 case 4:
+                    findCourseById();
+                    break;
+                case 5:
                     deleteCourseById();
                     break;
                 case 0:
@@ -69,10 +74,7 @@ public class CourseSubMenuImpl implements SubMenu {
         System.out.println("Enter the description of the new course:");
         String description = scanner.nextLine();
 
-        Course newCourse = Course.builder()
-                .courseName(name)
-                .courseDescription(description)
-                .build();
+        Course newCourse = Course.builder().courseName(name).courseDescription(description).build();
 
         courseDAO.create(newCourse);
 
@@ -90,25 +92,36 @@ public class CourseSubMenuImpl implements SubMenu {
         System.out.println("Enter the new description of the course:");
         String newDescription = scanner.nextLine();
 
-        Course updatedCourse = Course.builder()
-                .courseId(courseId)
-                .courseName(newName)
-                .courseDescription(newDescription)
-                .build();
+        Course updatedCourse = Course.builder().courseId(courseId).courseName(newName).courseDescription(newDescription).build();
 
         courseDAO.update(updatedCourse);
 
         System.out.println("Course information updated successfully.");
     }
 
-    private void deleteCourseById() {
-        System.out.println("Enter the ID of the course you want to delete:");
+    private void findCourseById() {
+        System.out.println("Enter course ID");
         int courseId = scanner.nextInt();
         scanner.nextLine();
 
-        courseDAO.deleteById(courseId);
+        Optional<Course> optionalCourse = courseDAO.findById(courseId);
 
-        System.out.println("Course with ID " + courseId + " deleted successfully.");
+        if (optionalCourse.isPresent()) {
+            Course course = optionalCourse.get();
+            System.out.println("ID: " + courseId + ". Course: " + course.getCourseName() + " - " + course.getCourseDescription());
+        } else {
+            System.out.println("Course with ID " + courseId + " not found.");
+        }
+    }
+
+    private void deleteCourseById() {
+        System.out.println("Enter the ID of the course you want to delete:");
+        int courseIdToDelete = scanner.nextInt();
+        scanner.nextLine();
+
+        courseDAO.deleteById(courseIdToDelete);
+
+        System.out.println("Course with ID " + courseIdToDelete + " deleted successfully.");
     }
 
 }

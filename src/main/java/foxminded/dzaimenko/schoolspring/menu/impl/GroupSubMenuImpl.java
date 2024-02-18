@@ -2,10 +2,12 @@ package foxminded.dzaimenko.schoolspring.menu.impl;
 
 import foxminded.dzaimenko.schoolspring.dao.GroupDao;
 import foxminded.dzaimenko.schoolspring.menu.SubMenu;
+import foxminded.dzaimenko.schoolspring.model.Course;
 import foxminded.dzaimenko.schoolspring.model.Group;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 @Component
@@ -16,8 +18,9 @@ public class GroupSubMenuImpl implements SubMenu {
             1. Show all groups
             2. Create a new group
             3. Update group information
-            4. Delete a group by ID
-            5. Find groups with less or equal students’ number
+            4. Find a group by ID
+            5. Delete a group by ID
+            6. Find groups with less or equal students’ number
                         
             0. Return to Main Menu
             """;
@@ -46,9 +49,12 @@ public class GroupSubMenuImpl implements SubMenu {
                     updateGroupInformation();
                     break;
                 case 4:
-                    deleteGroupById();
+                    findGroupById();
                     break;
                 case 5:
+                    deleteGroupById();
+                    break;
+                case 6:
                     findGroupsWithMaxStudentCount();
                     break;
                 case 0:
@@ -93,6 +99,21 @@ public class GroupSubMenuImpl implements SubMenu {
 
         groupDAO.update(updatedGroup);
         System.out.println("Group information updated successfully.");
+    }
+
+    private void findGroupById() {
+        System.out.println("Enter group ID");
+        int groupId = scanner.nextInt();
+        scanner.nextLine();
+
+        Optional<Group> optionalGroup = groupDAO.findById(groupId);
+
+        if (optionalGroup.isPresent()) {
+            Group group = optionalGroup.get();
+            System.out.println("ID: " + groupId + ". Group: " + group.getGroupName());
+        } else {
+            System.out.println("Group with ID " + groupId + " not found.");
+        }
     }
 
     private void deleteGroupById() {

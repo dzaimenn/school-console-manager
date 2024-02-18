@@ -64,7 +64,7 @@ class JdbcStudentDaoTest {
                 .build();
 
         dao.update(student);
-        Student updatedStudent = dao.findStudentById(1);
+        Student updatedStudent = dao.findById(1);
 
         assertNotNull(updatedStudent);
         assertEquals("John", updatedStudent.getFirstName());
@@ -84,7 +84,7 @@ class JdbcStudentDaoTest {
     @Test
     void testFindStudentById() {
         int studentId = 1;
-        Student student = dao.findStudentById(studentId);
+        Student student = dao.findById(studentId);
 
         assertNotNull(student);
         assertEquals(studentId, student.getStudentId());

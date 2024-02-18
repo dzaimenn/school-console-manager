@@ -1,12 +1,14 @@
 package foxminded.dzaimenko.schoolspring.dao.impl;
 
 import foxminded.dzaimenko.schoolspring.dao.GroupDao;
+import foxminded.dzaimenko.schoolspring.model.Course;
 import foxminded.dzaimenko.schoolspring.model.Group;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class JdbcGroupDao implements GroupDao {
@@ -22,6 +24,8 @@ public class JdbcGroupDao implements GroupDao {
     private static final String SQL_CREATE_GROUP = "INSERT INTO groups (group_name) VALUES (?)";
 
     private static final String SQL_UPDATE_GROUP = "UPDATE groups SET group_name = ? WHERE group_id = ?";
+
+    private static final String SQL_SELECT_GROUP_BY_ID = "SELECT * FROM groups WHERE group_id = ?";
 
     private static final String SQL_DELETE_GROUP_BY_ID = "DELETE FROM groups WHERE group_id = ?";
 
@@ -49,8 +53,14 @@ public class JdbcGroupDao implements GroupDao {
     }
 
     @Override
-    public void deleteById(int groupId) {
-        jdbcTemplate.update(SQL_DELETE_GROUP_BY_ID, groupId);
+    public Optional<Group> findById(int id) {
+        Group group = jdbcTemplate.queryForObject(SQL_SELECT_GROUP_BY_ID, BeanPropertyRowMapper.newInstance(Group.class), id);
+        return Optional.ofNullable(group);
+    }
+
+    @Override
+    public void deleteById(int id) {
+        jdbcTemplate.update(SQL_DELETE_GROUP_BY_ID, id);
     }
 
     @Override

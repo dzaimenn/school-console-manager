@@ -2,12 +2,14 @@ package foxminded.dzaimenko.schoolspring.dao.impl;
 
 import foxminded.dzaimenko.schoolspring.dao.StudentDao;
 import foxminded.dzaimenko.schoolspring.dao.rowmapper.StudentRowMapper;
+import foxminded.dzaimenko.schoolspring.model.Group;
 import foxminded.dzaimenko.schoolspring.model.Student;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class JdbcStudentDao implements StudentDao {
@@ -27,6 +29,8 @@ public class JdbcStudentDao implements StudentDao {
 
     private static final String SQL_UPDATE_STUDENT = "UPDATE students SET first_name = ?, last_name = ? WHERE student_id = ?";
 
+    private static final String SQL_SELECT_STUDENT_BY_ID = "SELECT * FROM students WHERE student_id = ?";
+
     private static final String SQL_DELETE_STUDENT_BY_ID = """
             WITH deleted_student_courses AS (
                 DELETE FROM student_courses
@@ -36,8 +40,6 @@ public class JdbcStudentDao implements StudentDao {
             DELETE FROM students
             WHERE student_id = ?;
             """;
-
-    private static final String SQL_FIND_STUDENT_BY_ID = "SELECT * FROM students WHERE student_id = ?";
 
     private static final String SQL_FIND_STUDENTS_BY_COURSE = """
             SELECT students.student_id, students.first_name, students.last_name
@@ -75,13 +77,14 @@ public class JdbcStudentDao implements StudentDao {
     }
 
     @Override
-    public void deleteById(int studentId) {
-        jdbcTemplate.update(SQL_DELETE_STUDENT_BY_ID, studentId, studentId);
+    public Optional<Student> findById(int id) {
+        Student student = jdbcTemplate.queryForObject(SQL_SELECT_STUDENT_BY_ID, new StudentRowMapper(), id);
+        return Optional.ofNullable(student);
     }
 
     @Override
-    public Student findStudentById(int studentId) {
-        return jdbcTemplate.queryForObject(SQL_FIND_STUDENT_BY_ID, new Object[]{studentId}, new StudentRowMapper());
+    public void deleteById(int id) {
+        jdbcTemplate.update(SQL_DELETE_STUDENT_BY_ID, id, id);
     }
 
     @Override

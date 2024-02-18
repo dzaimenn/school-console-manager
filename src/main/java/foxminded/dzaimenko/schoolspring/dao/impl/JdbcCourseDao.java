@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class JdbcCourseDao implements CourseDao {
@@ -22,6 +23,8 @@ public class JdbcCourseDao implements CourseDao {
     private static final String SQL_INSERT_COURSE = "INSERT INTO courses (course_name, course_description) VALUES (?, ?)";
 
     private static final String SQL_UPDATE_COURSE = "UPDATE courses SET course_name = ?, course_description = ? WHERE course_id = ?";
+
+    private static final String SQL_SELECT_COURSE_BY_ID = "SELECT * FROM courses WHERE course_id = ?";
 
     private static final String SQL_DELETE_COURSE_BY_ID = "DELETE FROM courses WHERE course_id = ?";
 
@@ -43,9 +46,15 @@ public class JdbcCourseDao implements CourseDao {
     }
 
     @Override
-    public void deleteById(int courseId) {
-        jdbcTemplate.update(SQL_DELETE_STUDENT_COURSE_BY_ID, courseId);
-        jdbcTemplate.update(SQL_DELETE_COURSE_BY_ID, courseId);
+    public Optional<Course> findById(int id) {
+        Course course = jdbcTemplate.queryForObject(SQL_SELECT_COURSE_BY_ID, BeanPropertyRowMapper.newInstance(Course.class), id);
+        return Optional.ofNullable(course);
+    }
+
+    @Override
+    public void deleteById(int id) {
+        jdbcTemplate.update(SQL_DELETE_STUDENT_COURSE_BY_ID, id);
+        jdbcTemplate.update(SQL_DELETE_COURSE_BY_ID, id);
     }
 
 }

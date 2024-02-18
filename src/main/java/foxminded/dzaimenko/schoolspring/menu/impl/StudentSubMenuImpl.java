@@ -6,6 +6,7 @@ import foxminded.dzaimenko.schoolspring.model.Student;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 @Component
@@ -16,8 +17,8 @@ public class StudentSubMenuImpl implements SubMenu {
             1. Show all students
             2. Create a new student
             3. Update student information
-            4. Delete a student by ID
-            5. Find students by ID
+            4. Find students by ID
+            5. Delete a student by ID
             6. Find students related to a course
             7. Add a student to a course
             8. Remove a student from a course
@@ -49,10 +50,10 @@ public class StudentSubMenuImpl implements SubMenu {
                     updateStudent();
                     break;
                 case 4:
-                    deleteStudentById();
+                    findStudentById();
                     break;
                 case 5:
-                    findStudentById();
+                    deleteStudentById();
                     break;
                 case 6:
                     findStudentsByCourse();
@@ -119,20 +120,31 @@ public class StudentSubMenuImpl implements SubMenu {
         System.out.println("Student information updated successfully.");
     }
 
+    private void findStudentById() {
+        System.out.println("Enter student ID:");
+        int studentId = scanner.nextInt();
+        scanner.nextLine();
+
+        Optional<Student> optionalStudent = studentDAO.findById(studentId);
+
+        optionalStudent.ifPresentOrElse(
+                student -> {
+                    System.out.println("Student found:");
+                    System.out.println("ID: " + student.getStudentId());
+                    System.out.println("First Name: " + student.getFirstName());
+                    System.out.println("Last Name: " + student.getLastName());
+                    System.out.println("Group ID: " + student.getGroupId());
+                },
+                () -> System.out.println("Student with ID " + studentId + " not found.")
+        );
+    }
+
     private void deleteStudentById() {
         System.out.println("Enter the ID of the student to delete:");
         int id = scanner.nextInt();
 
         studentDAO.deleteById(id);
         System.out.println("Student deleted successfully.");
-    }
-
-    private void findStudentById() {
-        System.out.println("Enter the ID of the student:");
-        int id = scanner.nextInt();
-
-        Student student = studentDAO.findStudentById(id);
-        System.out.println(student != null ? student : "Student not found.");
     }
 
     private void findStudentsByCourse() {

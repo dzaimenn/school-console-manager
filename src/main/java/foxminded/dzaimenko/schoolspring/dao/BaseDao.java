@@ -1,6 +1,7 @@
 package foxminded.dzaimenko.schoolspring.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BaseDao<T> {
 
@@ -10,6 +11,8 @@ public interface BaseDao<T> {
 
     void update(T entity);
 
-    void deleteById(int Id);
+    void deleteById(int id);
+
+    Optional<T> findById(int id);
 
 }
