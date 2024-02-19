@@ -1,4 +1,4 @@
-package foxminded.dzaimenko.schoolspring.dao.impl;
+package foxminded.dzaimenko.schoolspring.dao.jdbc;
 
 import foxminded.dzaimenko.schoolspring.dao.GroupDao;
 import foxminded.dzaimenko.schoolspring.model.Group;
@@ -42,7 +42,7 @@ class JdbcGroupDaoTest {
     @Test
     void testCreate() {
         Group newGroup = new Group();
-        newGroup.setGroupName("C");
+        newGroup.setName("C");
         dao.create(newGroup);
 
         List<Group> groups = dao.getAll();
@@ -53,20 +53,20 @@ class JdbcGroupDaoTest {
     @Test
     void testUpdate() {
         Group group = new Group();
-        group.setGroupId(1);
-        group.setGroupName("NewGroupName");
+        group.setiD(1);
+        group.setName("NewGroupName");
 
         dao.update(group);
 
         List<Group> allGroups = dao.getAll();
 
         Group updatedGroup = allGroups.stream()
-                .filter(g -> g.getGroupId() == 1)
+                .filter(g -> g.getiD() == 1)
                 .findFirst()
                 .orElse(null);
 
         assertNotNull(updatedGroup);
-        assertEquals("NewGroupName", updatedGroup.getGroupName());
+        assertEquals("NewGroupName", updatedGroup.getName());
     }
 
     @Test
@@ -81,7 +81,7 @@ class JdbcGroupDaoTest {
     @Test
     void testFindGroupsWithMaxStudentCount() {
         int maxStudentCount = 1;
-        List<Group> groups = dao.findGroupsWithMaxStudentCount(maxStudentCount);
+        List<Group> groups = dao.findWithMaxStudentCount(maxStudentCount);
 
         assertNotNull(groups);
         assertEquals(1, groups.size());

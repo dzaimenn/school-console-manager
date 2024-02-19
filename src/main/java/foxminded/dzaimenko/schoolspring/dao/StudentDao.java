@@ -6,12 +6,12 @@ import java.util.List;
 
 public interface StudentDao extends BaseDao<Student> {
 
-    List<Student> findStudentsByCourseName(String course);
+    List<Student> findByCourseName(String course);
 
-    void addStudentToCourse(int idStudentToAddToCourse, int idCourse);
+    void addToCourse(int idStudentToAddToCourse, int idCourse);
 
-    void removeStudentFromCourse(int idStudentToRemoveFromCourse, int idCourse);
+    void removeFromCourse(int idStudentToRemoveFromCourse, int idCourse);
 
-    int getNumberOfStudents();
+    int getTotalNumber();
 
 }

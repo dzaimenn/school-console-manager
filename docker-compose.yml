@@ -12,15 +12,3 @@ services:
 
     ports:
       - "127.0.0.1:5432:5432"
-
-  test_school_db:
-    image: postgres
-    restart: always
-
-    environment:
-      POSTGRES_PASSWORD: "test1234"
-      POSTGRES_USER: "test_school_manager"
-      POSTGRES_DB: "test_school_db"
-
-    ports:
-      - "127.0.0.1:5433:5432"

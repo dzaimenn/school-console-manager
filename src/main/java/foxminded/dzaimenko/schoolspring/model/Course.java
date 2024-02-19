@@ -13,8 +13,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Course {
 
-    private int courseId;
-    private String courseName;
-    private String courseDescription;
+    private Integer id;
+    private String name;
+    private String description;
 
 }

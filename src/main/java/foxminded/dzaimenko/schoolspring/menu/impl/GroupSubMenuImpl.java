@@ -2,7 +2,6 @@ package foxminded.dzaimenko.schoolspring.menu.impl;
 
 import foxminded.dzaimenko.schoolspring.dao.GroupDao;
 import foxminded.dzaimenko.schoolspring.menu.SubMenu;
-import foxminded.dzaimenko.schoolspring.model.Course;
 import foxminded.dzaimenko.schoolspring.model.Group;
 import org.springframework.stereotype.Component;
 
@@ -68,7 +67,7 @@ public class GroupSubMenuImpl implements SubMenu {
     private void showAllGroups() {
         List<Group> groups = groupDAO.getAll();
         for (Group group : groups) {
-            System.out.println(group.getGroupId() + ". " + group.getGroupName());
+            System.out.println(group.getId() + ". " + group.getName());
         }
     }
 
@@ -77,7 +76,7 @@ public class GroupSubMenuImpl implements SubMenu {
         String groupName = scanner.nextLine();
 
         Group newGroup = Group.builder()
-                .groupName(groupName)
+                .name(groupName)
                 .build();
 
         groupDAO.create(newGroup);
@@ -93,8 +92,8 @@ public class GroupSubMenuImpl implements SubMenu {
         String newGroupName = scanner.nextLine();
 
         Group updatedGroup = Group.builder()
-                .groupId(groupId)
-                .groupName(newGroupName)
+                .id(groupId)
+                .name(newGroupName)
                 .build();
 
         groupDAO.update(updatedGroup);
@@ -110,7 +109,7 @@ public class GroupSubMenuImpl implements SubMenu {
 
         if (optionalGroup.isPresent()) {
             Group group = optionalGroup.get();
-            System.out.println("ID: " + groupId + ". Group: " + group.getGroupName());
+            System.out.println("ID: " + groupId + ". Group: " + group.getName());
         } else {
             System.out.println("Group with ID " + groupId + " not found.");
         }
@@ -130,7 +129,7 @@ public class GroupSubMenuImpl implements SubMenu {
         int maxStudentCount = scanner.nextInt();
         scanner.nextLine();
 
-        List<Group> groups = groupDAO.findGroupsWithMaxStudentCount(maxStudentCount);
+        List<Group> groups = groupDAO.findWithMaxStudentCount(maxStudentCount);
 
         if (groups.isEmpty()) {
             System.out.println("No groups found with less or equal students' number.");

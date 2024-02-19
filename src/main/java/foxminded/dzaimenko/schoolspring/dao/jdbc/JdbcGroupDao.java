@@ -1,7 +1,6 @@
-package foxminded.dzaimenko.schoolspring.dao.impl;
+package foxminded.dzaimenko.schoolspring.dao.jdbc;
 
 import foxminded.dzaimenko.schoolspring.dao.GroupDao;
-import foxminded.dzaimenko.schoolspring.model.Course;
 import foxminded.dzaimenko.schoolspring.model.Group;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -44,12 +43,12 @@ public class JdbcGroupDao implements GroupDao {
 
     @Override
     public void create(Group group) {
-        jdbcTemplate.update(SQL_CREATE_GROUP, group.getGroupName());
+        jdbcTemplate.update(SQL_CREATE_GROUP, group.getName());
     }
 
     @Override
     public void update(Group group) {
-        jdbcTemplate.update(SQL_UPDATE_GROUP, group.getGroupName(), group.getGroupId());
+        jdbcTemplate.update(SQL_UPDATE_GROUP, group.getName(), group.getId());
     }
 
     @Override
@@ -64,7 +63,7 @@ public class JdbcGroupDao implements GroupDao {
     }
 
     @Override
-    public List<Group> findGroupsWithMaxStudentCount(int maxStudentCount) {
+    public List<Group> findWithMaxStudentCount(int maxStudentCount) {
         return jdbcTemplate.query(SQL_FIND_GROUPS_WITH_MAX_STUDENT_COUNT, new Object[]{maxStudentCount}, new BeanPropertyRowMapper<>(Group.class));
     }
 

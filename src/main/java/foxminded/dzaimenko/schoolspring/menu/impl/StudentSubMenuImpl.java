@@ -151,7 +151,7 @@ public class StudentSubMenuImpl implements SubMenu {
         System.out.println("Enter the name of the course:");
         String courseName = scanner.nextLine();
 
-        List<Student> students = studentDAO.findStudentsByCourseName(courseName);
+        List<Student> students = studentDAO.findByCourseName(courseName);
         for (Student student : students) {
             System.out.println(student);
         }
@@ -164,7 +164,7 @@ public class StudentSubMenuImpl implements SubMenu {
         System.out.println("Enter the ID of the course:");
         int courseId = scanner.nextInt();
 
-        studentDAO.addStudentToCourse(studentId, courseId);
+        studentDAO.addToCourse(studentId, courseId);
         System.out.println("Student added to the course successfully.");
     }
 
@@ -175,12 +175,12 @@ public class StudentSubMenuImpl implements SubMenu {
         System.out.println("Enter the ID of the course:");
         int courseId = scanner.nextInt();
 
-        studentDAO.removeStudentFromCourse(studentId, courseId);
+        studentDAO.removeFromCourse(studentId, courseId);
         System.out.println("Student removed from the course successfully.");
     }
 
     private void showTotalNumberOfStudents() {
-        int totalStudents = studentDAO.getNumberOfStudents();
+        int totalStudents = studentDAO.getTotalNumber();
         System.out.println("Total number of students: " + totalStudents);
     }
 

@@ -1,4 +1,4 @@
-package foxminded.dzaimenko.schoolspring.dao.impl;
+package foxminded.dzaimenko.schoolspring.dao.jdbc;
 
 import foxminded.dzaimenko.schoolspring.dao.StudentDao;
 import foxminded.dzaimenko.schoolspring.model.Student;
@@ -93,7 +93,7 @@ class JdbcStudentDaoTest {
     @Test
     void testFindStudentsByCourseName() {
         String courseName = "Java Basics";
-        List<Student> students = dao.findStudentsByCourseName(courseName);
+        List<Student> students = dao.findByCourseName(courseName);
 
         assertNotNull(students);
         assertEquals(2, students.size());
@@ -104,8 +104,8 @@ class JdbcStudentDaoTest {
         int studentId = 2;
         int courseId = 1;
 
-        dao.addStudentToCourse(studentId, courseId);
-        List<Student> students = dao.findStudentsByCourseName("Java Basics");
+        dao.addToCourse(studentId, courseId);
+        List<Student> students = dao.findByCourseName("Java Basics");
 
         assertNotNull(students);
         assertEquals(3, students.size());
@@ -116,8 +116,8 @@ class JdbcStudentDaoTest {
         int studentIdToRemoveFromCourse = 1;
         int courseId = 1;
 
-        dao.removeStudentFromCourse(studentIdToRemoveFromCourse, courseId);
-        List<Student> students = dao.findStudentsByCourseName("Java Basics");
+        dao.removeFromCourse(studentIdToRemoveFromCourse, courseId);
+        List<Student> students = dao.findByCourseName("Java Basics");
 
         assertNotNull(students);
         assertEquals(1, students.size());
@@ -125,7 +125,7 @@ class JdbcStudentDaoTest {
 
     @Test
     void testGetNumberOfStudents() {
-        int totalStudents = dao.getNumberOfStudents();
+        int totalStudents = dao.getTotalNumber();
 
         assertEquals(3, totalStudents);
     }

@@ -13,7 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Group {
 
-    private int groupId;
-    private String groupName;
+    private Integer id;
+    private String name;
 
 }

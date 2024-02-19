@@ -1,8 +1,6 @@
-package foxminded.dzaimenko.schoolspring.dao.impl;
+package foxminded.dzaimenko.schoolspring.dao.jdbc;
 
 import foxminded.dzaimenko.schoolspring.dao.StudentDao;
-import foxminded.dzaimenko.schoolspring.dao.rowmapper.StudentRowMapper;
-import foxminded.dzaimenko.schoolspring.model.Group;
 import foxminded.dzaimenko.schoolspring.model.Student;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -31,15 +29,11 @@ public class JdbcStudentDao implements StudentDao {
 
     private static final String SQL_SELECT_STUDENT_BY_ID = "SELECT * FROM students WHERE student_id = ?";
 
-    private static final String SQL_DELETE_STUDENT_BY_ID = """
-            WITH deleted_student_courses AS (
-                DELETE FROM student_courses
-                WHERE student_id = ?
-                RETURNING *
-            )
-            DELETE FROM students
-            WHERE student_id = ?;
-            """;
+    private static final String SQL_DELETE_STUDENT_COURSES_BY_ID =
+            "DELETE FROM student_courses WHERE student_id = ?";
+
+    private static final String SQL_DELETE_STUDENT_BY_ID =
+            "DELETE FROM students WHERE student_id = ?";
 
     private static final String SQL_FIND_STUDENTS_BY_COURSE = """
             SELECT students.student_id, students.first_name, students.last_name
@@ -63,7 +57,7 @@ public class JdbcStudentDao implements StudentDao {
 
     @Override
     public List<Student> getAll() {
-        return jdbcTemplate.query(SQL_SELECT_ALL_STUDENTS, new StudentRowMapper());
+        return jdbcTemplate.query(SQL_SELECT_ALL_STUDENTS, BeanPropertyRowMapper.newInstance(Student.class));
     }
 
     @Override
@@ -78,32 +72,33 @@ public class JdbcStudentDao implements StudentDao {
 
     @Override
     public Optional<Student> findById(int id) {
-        Student student = jdbcTemplate.queryForObject(SQL_SELECT_STUDENT_BY_ID, new StudentRowMapper(), id);
+        Student student = jdbcTemplate.queryForObject(SQL_SELECT_STUDENT_BY_ID, BeanPropertyRowMapper.newInstance(Student.class), id);
         return Optional.ofNullable(student);
     }
 
     @Override
     public void deleteById(int id) {
-        jdbcTemplate.update(SQL_DELETE_STUDENT_BY_ID, id, id);
+        jdbcTemplate.update(SQL_DELETE_STUDENT_COURSES_BY_ID, id);
+        jdbcTemplate.update(SQL_DELETE_STUDENT_BY_ID, id);
     }
 
     @Override
-    public List<Student> findStudentsByCourseName(String course) {
-        return jdbcTemplate.query(SQL_FIND_STUDENTS_BY_COURSE, new Object[]{course}, new StudentRowMapper());
+    public List<Student> findByCourseName(String course) {
+        return jdbcTemplate.query(SQL_FIND_STUDENTS_BY_COURSE, new Object[]{course}, BeanPropertyRowMapper.newInstance(Student.class));
     }
 
     @Override
-    public void addStudentToCourse(int studentId, int courseId) {
+    public void addToCourse(int studentId, int courseId) {
         jdbcTemplate.update(SQL_ADD_STUDENT_TO_COURSE, studentId, courseId);
     }
 
     @Override
-    public void removeStudentFromCourse(int idStudentToRemoveFromCourse, int idCourse) {
+    public void removeFromCourse(int idStudentToRemoveFromCourse, int idCourse) {
         jdbcTemplate.update(SQL_REMOVE_STUDENT_FROM_COURSE, idStudentToRemoveFromCourse, idCourse);
     }
 
     @Override
-    public int getNumberOfStudents() {
+    public int getTotalNumber() {
         int totalStudents;
 
         Integer result = jdbcTemplate.queryForObject(SQL_GET_NUMBER_OF_STUDENTS, Integer.class);

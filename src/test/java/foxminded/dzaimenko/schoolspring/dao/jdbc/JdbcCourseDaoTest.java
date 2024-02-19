@@ -1,4 +1,4 @@
-package foxminded.dzaimenko.schoolspring.dao.impl;
+package foxminded.dzaimenko.schoolspring.dao.jdbc;
 
 import foxminded.dzaimenko.schoolspring.dao.CourseDao;
 import foxminded.dzaimenko.schoolspring.model.Course;
@@ -42,36 +42,36 @@ class JdbcCourseDaoTest {
     void testCreate() {
         Course course = new Course();
 
-        course.setCourseName("Test Course");
-        course.setCourseDescription("Test Course Description");
+        course.setName("Test Course");
+        course.setDescription("Test Course Description");
 
         dao.create(course);
         List<Course> courses = dao.getAll();
 
         assertNotNull(courses);
         assertFalse(courses.isEmpty());
-        assertTrue(courses.stream().anyMatch(c -> c.getCourseName().equals("Test Course")));
+        assertTrue(courses.stream().anyMatch(c -> c.getName().equals("Test Course")));
     }
 
     @Test
     void testUpdate() {
         Course course = new Course();
-        course.setCourseId(1);
-        course.setCourseName("Updated Course Name");
-        course.setCourseDescription("Updated Course Description");
+        course.setId(1);
+        course.setName("Updated Course Name");
+        course.setDescription("Updated Course Description");
 
         dao.update(course);
 
         List<Course> allCourses = dao.getAll();
 
         Course updatedCourse = allCourses.stream()
-                .filter(c -> c.getCourseId() == 1)
+                .filter(c -> c.getId() == 1)
                 .findFirst()
                 .orElse(null);
 
         assertNotNull(updatedCourse);
-        assertEquals("Updated Course Name", updatedCourse.getCourseName());
-        assertEquals("Updated Course Description", updatedCourse.getCourseDescription());
+        assertEquals("Updated Course Name", updatedCourse.getName());
+        assertEquals("Updated Course Description", updatedCourse.getDescription());
     }
 
     @Test

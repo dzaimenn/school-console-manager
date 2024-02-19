@@ -63,7 +63,7 @@ public class CourseSubMenuImpl implements SubMenu {
     private void showAllCourses() {
         List<Course> courses = courseDAO.getAll();
         for (Course course : courses) {
-            System.out.println(course.getCourseId() + ". " + course.getCourseName());
+            System.out.println(course.getId() + ". " + course.getName() + " - " + course.getDescription());
         }
     }
 
@@ -74,7 +74,7 @@ public class CourseSubMenuImpl implements SubMenu {
         System.out.println("Enter the description of the new course:");
         String description = scanner.nextLine();
 
-        Course newCourse = Course.builder().courseName(name).courseDescription(description).build();
+        Course newCourse = Course.builder().name(name).description(description).build();
 
         courseDAO.create(newCourse);
 
@@ -92,7 +92,7 @@ public class CourseSubMenuImpl implements SubMenu {
         System.out.println("Enter the new description of the course:");
         String newDescription = scanner.nextLine();
 
-        Course updatedCourse = Course.builder().courseId(courseId).courseName(newName).courseDescription(newDescription).build();
+        Course updatedCourse = Course.builder().id(courseId).name(newName).description(newDescription).build();
 
         courseDAO.update(updatedCourse);
 
@@ -108,7 +108,7 @@ public class CourseSubMenuImpl implements SubMenu {
 
         if (optionalCourse.isPresent()) {
             Course course = optionalCourse.get();
-            System.out.println("ID: " + courseId + ". Course: " + course.getCourseName() + " - " + course.getCourseDescription());
+            System.out.println("ID: " + courseId + ". Course: " + course.getName() + " - " + course.getDescription());
         } else {
             System.out.println("Course with ID " + courseId + " not found.");
         }

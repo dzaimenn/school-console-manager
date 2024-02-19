@@ -1,4 +1,4 @@
-package foxminded.dzaimenko.schoolspring.dao.impl;
+package foxminded.dzaimenko.schoolspring.dao.jdbc;
 
 import foxminded.dzaimenko.schoolspring.dao.CourseDao;
 import foxminded.dzaimenko.schoolspring.model.Course;
@@ -37,12 +37,12 @@ public class JdbcCourseDao implements CourseDao {
 
     @Override
     public void create(Course course) {
-        jdbcTemplate.update(SQL_INSERT_COURSE, course.getCourseName(), course.getCourseDescription());
+        jdbcTemplate.update(SQL_INSERT_COURSE, course.getName(), course.getDescription());
     }
 
     @Override
     public void update(Course course) {
-        jdbcTemplate.update(SQL_UPDATE_COURSE, course.getCourseName(), course.getCourseDescription(), course.getCourseId());
+        jdbcTemplate.update(SQL_UPDATE_COURSE, course.getName(), course.getDescription(), course.getId());
     }
 
     @Override
