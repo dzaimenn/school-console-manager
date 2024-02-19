@@ -1,8 +1,8 @@
 package foxminded.dzaimenko.schoolspring.dao.jdbc;
 
 import foxminded.dzaimenko.schoolspring.dao.CourseDao;
+import foxminded.dzaimenko.schoolspring.dao.jdbc.rowmappers.CourseRowMapper;
 import foxminded.dzaimenko.schoolspring.model.Course;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -13,9 +13,11 @@ import java.util.Optional;
 public class JdbcCourseDao implements CourseDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final CourseRowMapper courseRowMapper;
 
-    public JdbcCourseDao(JdbcTemplate jdbcTemplate) {
+    public JdbcCourseDao(JdbcTemplate jdbcTemplate, CourseRowMapper courseRowMapper) {
         this.jdbcTemplate = jdbcTemplate;
+        this.courseRowMapper = courseRowMapper;
     }
 
     private static final String SQL_SELECT_ALL_COURSES = "SELECT * FROM courses";
@@ -32,7 +34,7 @@ public class JdbcCourseDao implements CourseDao {
 
     @Override
     public List<Course> getAll() {
-        return jdbcTemplate.query(SQL_SELECT_ALL_COURSES, BeanPropertyRowMapper.newInstance(Course.class));
+        return jdbcTemplate.query(SQL_SELECT_ALL_COURSES, courseRowMapper);
     }
 
     @Override
@@ -47,7 +49,7 @@ public class JdbcCourseDao implements CourseDao {
 
     @Override
     public Optional<Course> findById(int id) {
-        Course course = jdbcTemplate.queryForObject(SQL_SELECT_COURSE_BY_ID, BeanPropertyRowMapper.newInstance(Course.class), id);
+        Course course = jdbcTemplate.queryForObject(SQL_SELECT_COURSE_BY_ID, courseRowMapper, id);
         return Optional.ofNullable(course);
     }
 

@@ -1,8 +1,8 @@
 package foxminded.dzaimenko.schoolspring.dao.jdbc;
 
 import foxminded.dzaimenko.schoolspring.dao.StudentDao;
+import foxminded.dzaimenko.schoolspring.dao.jdbc.rowmappers.StudentRowMapper;
 import foxminded.dzaimenko.schoolspring.model.Student;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -13,9 +13,11 @@ import java.util.Optional;
 public class JdbcStudentDao implements StudentDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final StudentRowMapper studentRowMapper;
 
-    public JdbcStudentDao(JdbcTemplate jdbcTemplate) {
+    public JdbcStudentDao(JdbcTemplate jdbcTemplate, StudentRowMapper studentRowMapper) {
         this.jdbcTemplate = jdbcTemplate;
+        this.studentRowMapper = studentRowMapper;
     }
 
     private static final String SQL_SELECT_ALL_STUDENTS = "SELECT * FROM students";
@@ -57,7 +59,7 @@ public class JdbcStudentDao implements StudentDao {
 
     @Override
     public List<Student> getAll() {
-        return jdbcTemplate.query(SQL_SELECT_ALL_STUDENTS, BeanPropertyRowMapper.newInstance(Student.class));
+        return jdbcTemplate.query(SQL_SELECT_ALL_STUDENTS, studentRowMapper);
     }
 
     @Override
@@ -72,7 +74,7 @@ public class JdbcStudentDao implements StudentDao {
 
     @Override
     public Optional<Student> findById(int id) {
-        Student student = jdbcTemplate.queryForObject(SQL_SELECT_STUDENT_BY_ID, BeanPropertyRowMapper.newInstance(Student.class), id);
+        Student student = jdbcTemplate.queryForObject(SQL_SELECT_STUDENT_BY_ID, studentRowMapper, id);
         return Optional.ofNullable(student);
     }
 
@@ -84,7 +86,7 @@ public class JdbcStudentDao implements StudentDao {
 
     @Override
     public List<Student> findByCourseName(String course) {
-        return jdbcTemplate.query(SQL_FIND_STUDENTS_BY_COURSE, new Object[]{course}, BeanPropertyRowMapper.newInstance(Student.class));
+        return jdbcTemplate.query(SQL_FIND_STUDENTS_BY_COURSE, new Object[]{course}, studentRowMapper);
     }
 
     @Override

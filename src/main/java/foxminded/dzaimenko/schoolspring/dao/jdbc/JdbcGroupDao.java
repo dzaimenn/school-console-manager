@@ -1,8 +1,8 @@
 package foxminded.dzaimenko.schoolspring.dao.jdbc;
 
 import foxminded.dzaimenko.schoolspring.dao.GroupDao;
+import foxminded.dzaimenko.schoolspring.dao.jdbc.rowmappers.GroupRowMapper;
 import foxminded.dzaimenko.schoolspring.model.Group;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -13,9 +13,11 @@ import java.util.Optional;
 public class JdbcGroupDao implements GroupDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final GroupRowMapper groupRowMapper;
 
-    public JdbcGroupDao(JdbcTemplate jdbcTemplate) {
+    public JdbcGroupDao(JdbcTemplate jdbcTemplate, GroupRowMapper groupRowMapper) {
         this.jdbcTemplate = jdbcTemplate;
+        this.groupRowMapper = groupRowMapper;
     }
 
     private static final String SQL_SELECT_ALL_GROUPS = "SELECT * FROM groups";
@@ -38,7 +40,7 @@ public class JdbcGroupDao implements GroupDao {
 
     @Override
     public List<Group> getAll() {
-        return jdbcTemplate.query(SQL_SELECT_ALL_GROUPS, BeanPropertyRowMapper.newInstance(Group.class));
+        return jdbcTemplate.query(SQL_SELECT_ALL_GROUPS, groupRowMapper);
     }
 
     @Override
@@ -53,7 +55,7 @@ public class JdbcGroupDao implements GroupDao {
 
     @Override
     public Optional<Group> findById(int id) {
-        Group group = jdbcTemplate.queryForObject(SQL_SELECT_GROUP_BY_ID, BeanPropertyRowMapper.newInstance(Group.class), id);
+        Group group = jdbcTemplate.queryForObject(SQL_SELECT_GROUP_BY_ID, groupRowMapper, id);
         return Optional.ofNullable(group);
     }
 
@@ -64,7 +66,7 @@ public class JdbcGroupDao implements GroupDao {
 
     @Override
     public List<Group> findWithMaxStudentCount(int maxStudentCount) {
-        return jdbcTemplate.query(SQL_FIND_GROUPS_WITH_MAX_STUDENT_COUNT, new Object[]{maxStudentCount}, new BeanPropertyRowMapper<>(Group.class));
+        return jdbcTemplate.query(SQL_FIND_GROUPS_WITH_MAX_STUDENT_COUNT, new Object[]{maxStudentCount}, groupRowMapper);
     }
 
 }
