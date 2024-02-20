@@ -22,7 +22,7 @@ public class DatabaseFiller {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-//    @PostConstruct
+    @PostConstruct
     public void fillDataBase() {
         groupsTableFill();
         studentsTableFill();
