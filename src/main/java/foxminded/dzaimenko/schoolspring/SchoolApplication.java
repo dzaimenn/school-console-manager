@@ -19,22 +19,25 @@ import org.springframework.jdbc.core.JdbcTemplate;
 public class SchoolApplication {
 
     public static void main(String[] args) {
-        ApplicationContext context = SpringApplication.run(SchoolApplication.class, args);
 
-        Flyway flyway = context.getBean(Flyway.class);
-        flyway.clean();
-        flyway.migrate();
+        SpringApplication.run(SchoolApplication.class, args);
 
-        JdbcTemplate jdbcTemplate = context.getBean(JdbcTemplate.class);
-        DatabaseFiller databaseFiller = new DatabaseFiller(jdbcTemplate);
-        databaseFiller.fillDataBase();
-
-        SubMenu studentSubMenu = new StudentSubMenuImpl(context.getBean(StudentDao.class));
-        SubMenu groupSubMenu = new GroupSubMenuImpl(context.getBean(GroupDao.class));
-        SubMenu courseSubMenu = new CourseSubMenuImpl(context.getBean(CourseDao.class));
-
-        MainMenu mainMenu = new MainMenu(studentSubMenu, groupSubMenu, courseSubMenu);
-        mainMenu.displayMainMenu();
+//        ApplicationContext context =
+//
+//        Flyway flyway = context.getBean(Flyway.class);
+//        flyway.clean();
+//        flyway.migrate();
+//
+//        JdbcTemplate jdbcTemplate = context.getBean(JdbcTemplate.class);
+//        DatabaseFiller databaseFiller = new DatabaseFiller(jdbcTemplate);
+//        databaseFiller.fillDataBase();
+//
+//        SubMenu studentSubMenu = new StudentSubMenuImpl(context.getBean(StudentDao.class));
+//        SubMenu groupSubMenu = new GroupSubMenuImpl(context.getBean(GroupDao.class));
+//        SubMenu courseSubMenu = new CourseSubMenuImpl(context.getBean(CourseDao.class));
+//
+//        MainMenu mainMenu = new MainMenu(studentSubMenu, groupSubMenu, courseSubMenu);
+//        mainMenu.displayMainMenu();
 
     }
 

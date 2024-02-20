@@ -10,4 +10,4 @@ spring:
     schemas: public
     url: jdbc:postgresql://localhost:5432/school_db
     locations: classpath:db/migration
-    clean-disabled: false
+    cleanDisabled: false

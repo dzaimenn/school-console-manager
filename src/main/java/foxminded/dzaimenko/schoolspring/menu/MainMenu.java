@@ -1,5 +1,7 @@
 package foxminded.dzaimenko.schoolspring.menu;
 
+import jakarta.annotation.PostConstruct;
+
 import java.util.Scanner;
 
 public class MainMenu {
@@ -23,6 +25,7 @@ public class MainMenu {
         this.courseSubMenu = courseSubMenu;
     }
 
+    @PostConstruct
     public void displayMainMenu() {
         while (true) {
             System.out.println(MAIN_MENU_REQUEST);

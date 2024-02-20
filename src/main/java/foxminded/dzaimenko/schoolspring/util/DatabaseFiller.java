@@ -1,5 +1,6 @@
 package foxminded.dzaimenko.schoolspring.util;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +22,7 @@ public class DatabaseFiller {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+//    @PostConstruct
     public void fillDataBase() {
         groupsTableFill();
         studentsTableFill();
