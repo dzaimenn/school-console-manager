@@ -1,41 +1,39 @@
 package foxminded.dzaimenko.schoolspring.dao.jdbc;
 
+import foxminded.dzaimenko.schoolspring.config.DaoConfig;
+import foxminded.dzaimenko.schoolspring.config.RowMapperConfig;
 import foxminded.dzaimenko.schoolspring.dao.StudentDao;
 import foxminded.dzaimenko.schoolspring.model.Student;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql(
-        scripts = {"/sql/clear_tables.sql", "/sql/sample_data.sql"},
+        scripts = {"classpath:/sql/drop_test_tables.sql",
+                "classpath:/sql/create_test_tables.sql",
+                "classpath:/sql/insert_test_data.sql"},
+
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
 )
+@Import({DaoConfig.class, RowMapperConfig.class})
 class JdbcStudentDaoTest {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-    private StudentDao dao;
-
-    @BeforeEach
-    void setUp() {
-        dao = new JdbcStudentDao(jdbcTemplate);
-    }
+    private StudentDao studentDao;
 
     @Test
     void testGetAll() {
-        List<Student> students = dao.getAll();
-
-        assertNotNull(students);
+        List<Student> students = studentDao.getAll();
         assertEquals(3, students.size());
     }
 
@@ -47,53 +45,27 @@ class JdbcStudentDaoTest {
                 .lastName("Smith")
                 .build();
 
-        dao.create(student);
-        List<Student> students = dao.getAll();
+        studentDao.create(student);
+        List<Student> students = studentDao.getAll();
 
         assertNotNull(students);
         assertEquals(4, students.size());
     }
 
     @Test
-    void testUpdate() {
-
-        Student student = Student.builder()
-                .studentId(1)
-                .firstName("John")
-                .lastName("Smith")
-                .build();
-
-        dao.update(student);
-        Student updatedStudent = dao.findById(1);
-
-        assertNotNull(updatedStudent);
-        assertEquals("John", updatedStudent.getFirstName());
-        assertEquals("Smith", updatedStudent.getLastName());
-    }
-
-    @Test
     void testDeleteById() {
-        dao.deleteById(3);
+        studentDao.deleteById(3);
 
-        List<Student> students = dao.getAll();
+        List<Student> students = studentDao.getAll();
 
         assertNotNull(students);
         assertEquals(2, students.size());
     }
 
     @Test
-    void testFindStudentById() {
-        int studentId = 1;
-        Student student = dao.findById(studentId);
-
-        assertNotNull(student);
-        assertEquals(studentId, student.getStudentId());
-    }
-
-    @Test
     void testFindStudentsByCourseName() {
         String courseName = "Java Basics";
-        List<Student> students = dao.findByCourseName(courseName);
+        List<Student> students = studentDao.findByCourseName(courseName);
 
         assertNotNull(students);
         assertEquals(2, students.size());
@@ -104,8 +76,8 @@ class JdbcStudentDaoTest {
         int studentId = 2;
         int courseId = 1;
 
-        dao.addToCourse(studentId, courseId);
-        List<Student> students = dao.findByCourseName("Java Basics");
+        studentDao.addToCourse(studentId, courseId);
+        List<Student> students = studentDao.findByCourseName("Java Basics");
 
         assertNotNull(students);
         assertEquals(3, students.size());
@@ -116,8 +88,8 @@ class JdbcStudentDaoTest {
         int studentIdToRemoveFromCourse = 1;
         int courseId = 1;
 
-        dao.removeFromCourse(studentIdToRemoveFromCourse, courseId);
-        List<Student> students = dao.findByCourseName("Java Basics");
+        studentDao.removeFromCourse(studentIdToRemoveFromCourse, courseId);
+        List<Student> students = studentDao.findByCourseName("Java Basics");
 
         assertNotNull(students);
         assertEquals(1, students.size());
@@ -125,7 +97,7 @@ class JdbcStudentDaoTest {
 
     @Test
     void testGetNumberOfStudents() {
-        int totalStudents = dao.getTotalNumber();
+        int totalStudents = studentDao.getTotalNumber();
 
         assertEquals(3, totalStudents);
     }

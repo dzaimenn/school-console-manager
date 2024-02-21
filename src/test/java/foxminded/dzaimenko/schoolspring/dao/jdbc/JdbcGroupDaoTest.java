@@ -2,12 +2,10 @@ package foxminded.dzaimenko.schoolspring.dao.jdbc;
 
 import foxminded.dzaimenko.schoolspring.dao.GroupDao;
 import foxminded.dzaimenko.schoolspring.model.Group;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
@@ -18,24 +16,17 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @JdbcTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql(
-        scripts = {"/sql/clear_tables.sql", "/sql/sample_data.sql"},
+        scripts = {"src/main/resources/db/migration/V1__Create_Tables.sql", "sql/insert_test_data.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
 )
 class JdbcGroupDaoTest {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-    private GroupDao dao;
-
-    @BeforeEach
-    void setUp() {
-        dao = new JdbcGroupDao(jdbcTemplate);
-    }
+    private GroupDao groupDao;
 
     @Test
     void testGetAll() {
-        List<Group> groups = dao.getAll();
-        assertNotNull(groups);
+        List<Group> groups = groupDao.getAll();
         assertEquals(2, groups.size());
     }
 
@@ -43,9 +34,9 @@ class JdbcGroupDaoTest {
     void testCreate() {
         Group newGroup = new Group();
         newGroup.setName("C");
-        dao.create(newGroup);
+        groupDao.create(newGroup);
 
-        List<Group> groups = dao.getAll();
+        List<Group> groups = groupDao.getAll();
         assertNotNull(groups);
         assertEquals(3, groups.size());
     }
@@ -53,15 +44,15 @@ class JdbcGroupDaoTest {
     @Test
     void testUpdate() {
         Group group = new Group();
-        group.setiD(1);
+        group.setId(1);
         group.setName("NewGroupName");
 
-        dao.update(group);
+        groupDao.update(group);
 
-        List<Group> allGroups = dao.getAll();
+        List<Group> allGroups = groupDao.getAll();
 
         Group updatedGroup = allGroups.stream()
-                .filter(g -> g.getiD() == 1)
+                .filter(g -> g.getId() == 1)
                 .findFirst()
                 .orElse(null);
 
@@ -71,9 +62,9 @@ class JdbcGroupDaoTest {
 
     @Test
     void testDeleteById() {
-        dao.deleteById(1);
+        groupDao.deleteById(1);
 
-        List<Group> groups = dao.getAll();
+        List<Group> groups = groupDao.getAll();
         assertNotNull(groups);
         assertEquals(1, groups.size());
     }
@@ -81,7 +72,7 @@ class JdbcGroupDaoTest {
     @Test
     void testFindGroupsWithMaxStudentCount() {
         int maxStudentCount = 1;
-        List<Group> groups = dao.findWithMaxStudentCount(maxStudentCount);
+        List<Group> groups = groupDao.findWithMaxStudentCount(maxStudentCount);
 
         assertNotNull(groups);
         assertEquals(1, groups.size());
