@@ -1,11 +1,14 @@
 package foxminded.dzaimenko.schoolspring.dao.jdbc;
 
+import foxminded.dzaimenko.schoolspring.config.DaoConfig;
+import foxminded.dzaimenko.schoolspring.config.RowMapperConfig;
 import foxminded.dzaimenko.schoolspring.dao.GroupDao;
 import foxminded.dzaimenko.schoolspring.model.Group;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
@@ -16,9 +19,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @JdbcTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql(
-        scripts = {"src/main/resources/db/migration/V1__Create_Tables.sql", "sql/insert_test_data.sql"},
+        scripts = {"classpath:/sql/drop_test_tables.sql",
+                "classpath:/sql/create_test_tables.sql",
+                "classpath:/sql/insert_test_data.sql"},
+
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
 )
+@Import({DaoConfig.class, RowMapperConfig.class})
 class JdbcGroupDaoTest {
 
     @Autowired
