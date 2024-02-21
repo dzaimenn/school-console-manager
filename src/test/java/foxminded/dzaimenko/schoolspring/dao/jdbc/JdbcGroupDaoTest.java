@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,10 +32,20 @@ class JdbcGroupDaoTest {
     @Autowired
     private GroupDao groupDao;
 
+    private List<Group> prepareExpectedGroups() {
+        List<Group> expectedGroups = new ArrayList<>();
+        expectedGroups.add(Group.builder().id(1).name("A").build());
+        expectedGroups.add(Group.builder().id(2).name("B").build());
+
+        return expectedGroups;
+    }
+
     @Test
     void testGetAll() {
-        List<Group> groups = groupDao.getAll();
-        assertEquals(2, groups.size());
+        List<Group> expected = prepareExpectedGroups();
+        List<Group> actual = groupDao.getAll();
+
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -44,7 +55,7 @@ class JdbcGroupDaoTest {
         groupDao.create(newGroup);
 
         List<Group> groups = groupDao.getAll();
-        assertNotNull(groups);
+
         assertEquals(3, groups.size());
     }
 
@@ -63,7 +74,6 @@ class JdbcGroupDaoTest {
                 .findFirst()
                 .orElse(null);
 
-        assertNotNull(updatedGroup);
         assertEquals("NewGroupName", updatedGroup.getName());
     }
 
@@ -72,7 +82,7 @@ class JdbcGroupDaoTest {
         groupDao.deleteById(1);
 
         List<Group> groups = groupDao.getAll();
-        assertNotNull(groups);
+
         assertEquals(1, groups.size());
     }
 
@@ -81,7 +91,6 @@ class JdbcGroupDaoTest {
         int maxStudentCount = 1;
         List<Group> groups = groupDao.findWithMaxStudentCount(maxStudentCount);
 
-        assertNotNull(groups);
         assertEquals(1, groups.size());
     }
 

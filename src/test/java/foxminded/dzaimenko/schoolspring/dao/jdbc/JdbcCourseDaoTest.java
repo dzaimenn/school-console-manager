@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,10 +31,19 @@ class JdbcCourseDaoTest {
     @Autowired
     private CourseDao dao;
 
+    private List<Course> prepareExpectedCourses() {
+        List<Course> expectedCourses = new ArrayList<>();
+        expectedCourses.add(Course.builder().id(1).name("Java Basics").description("Introduction to Java programming").build());
+        expectedCourses.add(Course.builder().id(2).name("Databases").description("Introduction to databases").build());
+        return expectedCourses;
+    }
+
     @Test
     void testGetAll() {
-        List<Course> courses = dao.getAll();
-        assertFalse(courses.isEmpty());
+        List<Course> expected = prepareExpectedCourses();
+        List<Course> actual = dao.getAll();
+
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -46,7 +56,6 @@ class JdbcCourseDaoTest {
         dao.create(course);
         List<Course> courses = dao.getAll();
 
-        assertNotNull(courses);
         assertFalse(courses.isEmpty());
         assertTrue(courses.stream().anyMatch(c -> c.getName().equals("Test Course")));
     }
@@ -67,7 +76,6 @@ class JdbcCourseDaoTest {
                 .findFirst()
                 .orElse(null);
 
-        assertNotNull(updatedCourse);
         assertEquals("Updated Course Name", updatedCourse.getName());
         assertEquals("Updated Course Description", updatedCourse.getDescription());
     }

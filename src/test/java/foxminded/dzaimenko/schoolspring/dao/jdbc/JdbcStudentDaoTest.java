@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,10 +32,21 @@ class JdbcStudentDaoTest {
     @Autowired
     private StudentDao studentDao;
 
+    private List<Student> prepareExpectedStudents() {
+        List<Student> expectedStudents = new ArrayList<>();
+        expectedStudents.add(Student.builder().groupId(1).firstName("Alex").lastName("Williams").build());
+        expectedStudents.add(Student.builder().groupId(1).firstName("Eva").lastName("Miller").build());
+        expectedStudents.add(Student.builder().groupId(2).firstName("Leon").lastName("Kennedy").build());
+
+        return expectedStudents;
+    }
+
     @Test
     void testGetAll() {
-        List<Student> students = studentDao.getAll();
-        assertEquals(3, students.size());
+        List<Student> expected = prepareExpectedStudents();
+        List<Student> actual = studentDao.getAll();
+
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -48,7 +60,6 @@ class JdbcStudentDaoTest {
         studentDao.create(student);
         List<Student> students = studentDao.getAll();
 
-        assertNotNull(students);
         assertEquals(4, students.size());
     }
 
@@ -58,7 +69,6 @@ class JdbcStudentDaoTest {
 
         List<Student> students = studentDao.getAll();
 
-        assertNotNull(students);
         assertEquals(2, students.size());
     }
 
@@ -67,7 +77,6 @@ class JdbcStudentDaoTest {
         String courseName = "Java Basics";
         List<Student> students = studentDao.findByCourseName(courseName);
 
-        assertNotNull(students);
         assertEquals(2, students.size());
     }
 
@@ -79,7 +88,6 @@ class JdbcStudentDaoTest {
         studentDao.addToCourse(studentId, courseId);
         List<Student> students = studentDao.findByCourseName("Java Basics");
 
-        assertNotNull(students);
         assertEquals(3, students.size());
     }
 
@@ -91,7 +99,6 @@ class JdbcStudentDaoTest {
         studentDao.removeFromCourse(studentIdToRemoveFromCourse, courseId);
         List<Student> students = studentDao.findByCourseName("Java Basics");
 
-        assertNotNull(students);
         assertEquals(1, students.size());
     }
 
