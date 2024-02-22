@@ -93,8 +93,8 @@ public class JdbcStudentDao implements StudentDao {
     }
 
     @Override
-    public void removeFromCourse(int idStudentToRemoveFromCourse, int idCourse) {
-        jdbcTemplate.update(SQL_REMOVE_STUDENT_FROM_COURSE, idStudentToRemoveFromCourse, idCourse);
+    public void removeFromCourse(int studentId, int courseId) {
+        jdbcTemplate.update(SQL_REMOVE_STUDENT_FROM_COURSE, studentId, courseId);
     }
 
     @Override
