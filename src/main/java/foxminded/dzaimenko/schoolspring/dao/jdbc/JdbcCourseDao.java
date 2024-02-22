@@ -12,14 +12,6 @@ import java.util.Optional;
 @Repository
 public class JdbcCourseDao implements CourseDao {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final CourseRowMapper courseRowMapper;
-
-    public JdbcCourseDao(JdbcTemplate jdbcTemplate, CourseRowMapper courseRowMapper) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.courseRowMapper = courseRowMapper;
-    }
-
     private static final String SQL_SELECT_ALL_COURSES = "SELECT * FROM courses";
 
     private static final String SQL_INSERT_COURSE = "INSERT INTO courses (course_name, course_description) VALUES (?, ?)";
@@ -31,6 +23,14 @@ public class JdbcCourseDao implements CourseDao {
     private static final String SQL_DELETE_COURSE_BY_ID = "DELETE FROM courses WHERE course_id = ?";
 
     private static final String SQL_DELETE_STUDENT_COURSE_BY_ID = "DELETE FROM student_courses WHERE course_id = ?";
+
+    private final JdbcTemplate jdbcTemplate;
+    private final CourseRowMapper courseRowMapper;
+
+    public JdbcCourseDao(JdbcTemplate jdbcTemplate, CourseRowMapper courseRowMapper) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.courseRowMapper = courseRowMapper;
+    }
 
     @Override
     public List<Course> getAll() {

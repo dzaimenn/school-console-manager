@@ -12,30 +12,13 @@ import java.util.Optional;
 @Repository
 public class JdbcStudentDao implements StudentDao {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final StudentRowMapper studentRowMapper;
-
-    public JdbcStudentDao(JdbcTemplate jdbcTemplate, StudentRowMapper studentRowMapper) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.studentRowMapper = studentRowMapper;
-    }
-
-    private static final String SQL_SELECT_ALL_STUDENTS = "SELECT * FROM students";
-
-    private static final String SQL_ADD_NEW_STUDENT = """
-            INSERT INTO students (first_name, last_name)
-            VALUES (?,?);
-            """;
-
     private static final String SQL_UPDATE_STUDENT = "UPDATE students SET first_name = ?, last_name = ? WHERE student_id = ?";
 
     private static final String SQL_SELECT_STUDENT_BY_ID = "SELECT * FROM students WHERE student_id = ?";
 
-    private static final String SQL_DELETE_STUDENT_COURSES_BY_ID =
-            "DELETE FROM student_courses WHERE student_id = ?";
+    private static final String SQL_DELETE_STUDENT_COURSES_BY_ID = "DELETE FROM student_courses WHERE student_id = ?";
 
-    private static final String SQL_DELETE_STUDENT_BY_ID =
-            "DELETE FROM students WHERE student_id = ?";
+    private static final String SQL_DELETE_STUDENT_BY_ID = "DELETE FROM students WHERE student_id = ?";
 
     private static final String SQL_FIND_STUDENTS_BY_COURSE = """
             SELECT students.student_id, students.first_name, students.last_name
@@ -56,6 +39,21 @@ public class JdbcStudentDao implements StudentDao {
             """;
 
     private static final String SQL_GET_NUMBER_OF_STUDENTS = "SELECT COUNT(*) AS total_students FROM students";
+
+    private final JdbcTemplate jdbcTemplate;
+    private final StudentRowMapper studentRowMapper;
+
+    public JdbcStudentDao(JdbcTemplate jdbcTemplate, StudentRowMapper studentRowMapper) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.studentRowMapper = studentRowMapper;
+    }
+
+    private static final String SQL_SELECT_ALL_STUDENTS = "SELECT * FROM students";
+
+    private static final String SQL_ADD_NEW_STUDENT = """
+            INSERT INTO students (first_name, last_name)
+            VALUES (?,?);
+            """;
 
     @Override
     public List<Student> getAll() {

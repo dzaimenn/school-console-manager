@@ -12,14 +12,6 @@ import java.util.Optional;
 @Repository
 public class JdbcGroupDao implements GroupDao {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final GroupRowMapper groupRowMapper;
-
-    public JdbcGroupDao(JdbcTemplate jdbcTemplate, GroupRowMapper groupRowMapper) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.groupRowMapper = groupRowMapper;
-    }
-
     private static final String SQL_SELECT_ALL_GROUPS = "SELECT * FROM groups";
 
     private static final String SQL_CREATE_GROUP = "INSERT INTO groups (group_name) VALUES (?)";
@@ -37,6 +29,14 @@ public class JdbcGroupDao implements GroupDao {
             GROUP BY g.group_id, g.group_name
             HAVING COUNT(s.student_id) <= ?
             """;
+
+    private final JdbcTemplate jdbcTemplate;
+    private final GroupRowMapper groupRowMapper;
+
+    public JdbcGroupDao(JdbcTemplate jdbcTemplate, GroupRowMapper groupRowMapper) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.groupRowMapper = groupRowMapper;
+    }
 
     @Override
     public List<Group> getAll() {
