@@ -5,7 +5,7 @@ import java.util.Optional;
 
 public interface BaseDao<T> {
 
-    void create(T entity);
+    Integer create(T entity);
 
     List<T> getAll();
 

@@ -14,7 +14,7 @@ public class JdbcCourseDao implements CourseDao {
 
     private static final String SQL_SELECT_ALL_COURSES = "SELECT * FROM courses";
 
-    private static final String SQL_INSERT_COURSE = "INSERT INTO courses (course_name, course_description) VALUES (?, ?)";
+    private static final String SQL_CREATE_COURSE = "INSERT INTO courses (course_name, course_description) VALUES (?, ?) RETURNING course_id";
 
     private static final String SQL_UPDATE_COURSE = "UPDATE courses SET course_name = ?, course_description = ? WHERE course_id = ?";
 
@@ -38,8 +38,8 @@ public class JdbcCourseDao implements CourseDao {
     }
 
     @Override
-    public void create(Course course) {
-        jdbcTemplate.update(SQL_INSERT_COURSE, course.getName(), course.getDescription());
+    public Integer create(Course course) {
+        return jdbcTemplate.queryForObject(SQL_CREATE_COURSE, Integer.class, course.getName(), course.getDescription());
     }
 
     @Override

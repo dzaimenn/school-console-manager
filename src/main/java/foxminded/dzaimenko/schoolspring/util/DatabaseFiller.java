@@ -1,38 +1,29 @@
 package foxminded.dzaimenko.schoolspring.util;
 
+import foxminded.dzaimenko.schoolspring.dao.CourseDao;
+import foxminded.dzaimenko.schoolspring.dao.GroupDao;
+import foxminded.dzaimenko.schoolspring.dao.StudentDao;
 import foxminded.dzaimenko.schoolspring.model.Course;
 import foxminded.dzaimenko.schoolspring.model.Group;
 import foxminded.dzaimenko.schoolspring.model.Student;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
+import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
 @Component
 public class DatabaseFiller {
     private final Random random = new Random();
-    private final JdbcTemplate jdbcTemplate;
+    private final CourseDao courseDao;
+    private final GroupDao groupDao;
+    private final StudentDao studentDao;
 
-    private final String SQL_INSERT_GROUPS = "INSERT INTO groups (group_name) VALUES (?)";
-    private final String SQL_INSERT_STUDENTS = "INSERT INTO students (group_id, first_name, last_name) VALUES (?, ?, ?)";
-    private final String SQL_INSERT_COURSES = "INSERT INTO courses (course_name, course_description) VALUES (?,?)";
-    private final String SQL_INSERT_STUDENT_COURSES = "INSERT INTO student_courses (student_id, course_id) VALUES (?,?)";
-
-    private final String SQL_GET_GROUP_ID = "SELECT group_id FROM groups WHERE group_name = ?";
-    private final String SQL_GET_COURSE_ID = "SELECT course_id FROM courses WHERE course_name = ?";
-    private final String SQL_GET_STUDENT_ID = "SELECT student_id FROM students WHERE first_name = ? AND last_name = ?";
-
-    public final List<Group> groups = new ArrayList<>();
-    public final List<Course> courses = new ArrayList<>();
-
-    public final List<Student> students = new ArrayList<>();
-
-    public DatabaseFiller(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public DatabaseFiller(CourseDao courseDao, GroupDao groupDao, StudentDao studentDao) {
+        this.courseDao = courseDao;
+        this.groupDao = groupDao;
+        this.studentDao = studentDao;
     }
 
     public void fillDataBase() {
@@ -50,13 +41,7 @@ public class DatabaseFiller {
             Group group = new Group();
             group.setName(groupName);
 
-
-            jdbcTemplate.update(SQL_INSERT_GROUPS, groupName);
-
-            Integer id = jdbcTemplate.queryForObject(SQL_GET_GROUP_ID, Integer.class, groupName);
-            group.setId(id);
-
-            groups.add(group);
+            group.setId(groupDao.create(group));
         }
     }
 
@@ -77,9 +62,11 @@ public class DatabaseFiller {
 
     private void studentsTableFill() {
         Set<String> uniqueStudents = generateUniqueStudentsSet();
+        List<Group> groups = groupDao.getAll();
 
         for (String uniqueKey : uniqueStudents) {
             Integer groupId = groups.get(random.nextInt(10)).getId();
+
             String[] nameParts = uniqueKey.split(" ");
             String firstName = nameParts[0];
             String lastName = nameParts[1];
@@ -89,12 +76,7 @@ public class DatabaseFiller {
             student.setFirstName(firstName);
             student.setLastName(lastName);
 
-            jdbcTemplate.update(SQL_INSERT_STUDENTS, groupId, firstName, lastName);
-
-            Integer id = jdbcTemplate.queryForObject(SQL_GET_STUDENT_ID, Integer.class, firstName, lastName);
-            student.setGroupId(id);
-
-            students.add(student);
+            student.setStudentId(studentDao.create(student));
         }
     }
 
@@ -108,29 +90,30 @@ public class DatabaseFiller {
             course.setName(courseName);
             course.setDescription(courseDescription);
 
-            jdbcTemplate.update(SQL_INSERT_COURSES, courseName, courseDescription);
-
-            Integer id = jdbcTemplate.queryForObject(SQL_GET_COURSE_ID, Integer.class, courseName);
-            course.setId(id);
-
-            courses.add(course);
+            course.setId(courseDao.create(course));
         }
-
     }
 
     private void studentsCoursesTableFill() {
+        List<Student> students = studentDao.getAll();
+        List<Course> courses = courseDao.getAll();
 
-        for (int studentId = 1; studentId <= 200; studentId++) {
+        for (Student student : students) {
+            assignRandomCourses(student, courses);
+        }
+    }
 
-            Set<Integer> assignedCourses = new HashSet<>();
-            int numberOfCourses = random.nextInt(3) + 1;
+    private void assignRandomCourses(Student student, List<Course> courses) {
+        Set<Integer> assignedCourseIds = new HashSet<>();
+        int numberOfCourses = random.nextInt(3) + 1;
 
-            while (assignedCourses.size() < numberOfCourses) {
-                int courseId = courses.get(random.nextInt(10)).getId();
+        while (assignedCourseIds.size() < numberOfCourses) {
+            int randomIndex = random.nextInt(courses.size());
 
-                if (assignedCourses.add(courseId)) {
-                    jdbcTemplate.update(SQL_INSERT_STUDENT_COURSES, studentId, courseId);
-                }
+            Course course = courses.get(randomIndex);
+
+            if (assignedCourseIds.add(course.getId())) {
+                studentDao.addToCourse(student.getStudentId(), course.getId());
             }
         }
     }
