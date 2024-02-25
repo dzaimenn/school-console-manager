@@ -1,14 +1,12 @@
 package foxminded.dzaimenko.schoolspring.dao.jdbc;
 
-import foxminded.dzaimenko.schoolspring.config.DaoConfig;
-import foxminded.dzaimenko.schoolspring.config.RowMapperConfig;
 import foxminded.dzaimenko.schoolspring.dao.GroupDao;
 import foxminded.dzaimenko.schoolspring.model.Group;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.ArrayList;
@@ -25,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
 )
-@Import({DaoConfig.class, RowMapperConfig.class})
+@ComponentScan(basePackages = "foxminded.dzaimenko.schoolspring.dao")
 class JdbcGroupDaoTest {
 
     @Autowired

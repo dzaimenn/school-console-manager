@@ -1,7 +1,7 @@
 package foxminded.dzaimenko.schoolspring.dao.jdbc;
 
 import foxminded.dzaimenko.schoolspring.dao.CourseDao;
-import foxminded.dzaimenko.schoolspring.dao.jdbc.rowmappers.CourseRowMapper;
+import foxminded.dzaimenko.schoolspring.dao.jdbc.rowmapper.CourseRowMapper;
 import foxminded.dzaimenko.schoolspring.model.Course;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

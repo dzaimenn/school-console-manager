@@ -1,9 +1,12 @@
 package foxminded.dzaimenko.schoolspring.menu;
 
+import foxminded.dzaimenko.schoolspring.util.DatabaseFiller;
 import jakarta.annotation.PostConstruct;
+import org.springframework.stereotype.Component;
 
 import java.util.Scanner;
 
+@Component
 public class MainMenu {
     private final String MAIN_MENU_REQUEST = """
             ______________________________________________________________
@@ -15,18 +18,22 @@ public class MainMenu {
             0. Exit
             """;
     private final Scanner scanner = new Scanner(System.in);
-    private final SubMenu studentSubMenu;
-    private final SubMenu groupSubMenu;
-    private final SubMenu courseSubMenu;
+    private final StudentSubMenu studentSubMenu;
+    private final GroupSubMenu groupSubMenu;
+    private final CourseSubMenu courseSubMenu;
+    private final DatabaseFiller databaseFiller;
 
-    public MainMenu(SubMenu studentSubMenu, SubMenu groupSubMenu, SubMenu courseSubMenu) {
+    public MainMenu(StudentSubMenu studentSubMenu, GroupSubMenu groupSubMenu, CourseSubMenu courseSubMenu, DatabaseFiller databaseFiller) {
         this.studentSubMenu = studentSubMenu;
         this.groupSubMenu = groupSubMenu;
         this.courseSubMenu = courseSubMenu;
+        this.databaseFiller = databaseFiller;
     }
 
     @PostConstruct
     public void displayMainMenu() {
+        databaseFiller.fillDataBase();
+
         while (true) {
             System.out.println(MAIN_MENU_REQUEST);
             int choice = scanner.nextInt();

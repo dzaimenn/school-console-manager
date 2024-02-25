@@ -3,7 +3,6 @@ package foxminded.dzaimenko.schoolspring.util;
 import foxminded.dzaimenko.schoolspring.model.Course;
 import foxminded.dzaimenko.schoolspring.model.Group;
 import foxminded.dzaimenko.schoolspring.model.Student;
-import jakarta.annotation.PostConstruct;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -36,7 +35,6 @@ public class DatabaseFiller {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @PostConstruct
     public void fillDataBase() {
         groupsTableFill();
         studentsTableFill();

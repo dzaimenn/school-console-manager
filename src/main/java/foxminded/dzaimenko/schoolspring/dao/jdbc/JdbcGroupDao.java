@@ -1,7 +1,7 @@
 package foxminded.dzaimenko.schoolspring.dao.jdbc;
 
 import foxminded.dzaimenko.schoolspring.dao.GroupDao;
-import foxminded.dzaimenko.schoolspring.dao.jdbc.rowmappers.GroupRowMapper;
+import foxminded.dzaimenko.schoolspring.dao.jdbc.rowmapper.GroupRowMapper;
 import foxminded.dzaimenko.schoolspring.model.Group;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

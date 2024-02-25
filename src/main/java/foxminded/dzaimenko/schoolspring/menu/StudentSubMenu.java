@@ -1,9 +1,7 @@
-package foxminded.dzaimenko.schoolspring.menu.impl;
+package foxminded.dzaimenko.schoolspring.menu;
 
 import foxminded.dzaimenko.schoolspring.dao.StudentDao;
-import foxminded.dzaimenko.schoolspring.menu.SubMenu;
 import foxminded.dzaimenko.schoolspring.model.Student;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -11,7 +9,7 @@ import java.util.Optional;
 import java.util.Scanner;
 
 @Component
-public class StudentSubMenuImpl implements SubMenu {
+public class StudentSubMenu {
     private final String STUDENT_MENU_REQUEST = """
             ______________________________________________________________
             Please select an option (Enter the number):
@@ -31,7 +29,7 @@ public class StudentSubMenuImpl implements SubMenu {
 
     private final StudentDao studentDAO;
 
-    public StudentSubMenuImpl(StudentDao studentDAO) {
+    public StudentSubMenu(StudentDao studentDAO) {
         this.studentDAO = studentDAO;
     }
 

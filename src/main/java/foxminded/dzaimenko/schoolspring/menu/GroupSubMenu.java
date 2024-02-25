@@ -1,7 +1,6 @@
-package foxminded.dzaimenko.schoolspring.menu.impl;
+package foxminded.dzaimenko.schoolspring.menu;
 
 import foxminded.dzaimenko.schoolspring.dao.GroupDao;
-import foxminded.dzaimenko.schoolspring.menu.SubMenu;
 import foxminded.dzaimenko.schoolspring.model.Group;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +9,7 @@ import java.util.Optional;
 import java.util.Scanner;
 
 @Component
-public class GroupSubMenuImpl implements SubMenu {
+public class GroupSubMenu {
     private final String GROUP_MENU_REQUEST = """
             ______________________________________________________________
             Please select an option (Enter the number):
@@ -27,7 +26,7 @@ public class GroupSubMenuImpl implements SubMenu {
     private final Scanner scanner = new Scanner(System.in);
     private final GroupDao groupDAO;
 
-    public GroupSubMenuImpl(GroupDao groupDAO) {
+    public GroupSubMenu(GroupDao groupDAO) {
         this.groupDAO = groupDAO;
     }
 

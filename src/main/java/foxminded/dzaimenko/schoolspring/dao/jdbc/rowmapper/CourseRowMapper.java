@@ -1,11 +1,13 @@
-package foxminded.dzaimenko.schoolspring.dao.jdbc.rowmappers;
+package foxminded.dzaimenko.schoolspring.dao.jdbc.rowmapper;
 
 import foxminded.dzaimenko.schoolspring.model.Course;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@Component
 public class CourseRowMapper implements RowMapper<Course> {
 
     @Override
