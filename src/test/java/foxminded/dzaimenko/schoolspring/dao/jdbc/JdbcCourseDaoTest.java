@@ -1,6 +1,5 @@
 package foxminded.dzaimenko.schoolspring.dao.jdbc;
 
-
 import foxminded.dzaimenko.schoolspring.dao.CourseDao;
 import foxminded.dzaimenko.schoolspring.model.Course;
 import org.junit.jupiter.api.Test;
@@ -8,14 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.jdbc.JdbcTestUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -31,6 +30,9 @@ class JdbcCourseDaoTest {
 
     @Autowired
     private CourseDao dao;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     private List<Course> prepareExpectedCourses() {
         List<Course> expectedCourses = new ArrayList<>();
@@ -49,46 +51,62 @@ class JdbcCourseDaoTest {
 
     @Test
     void testCreate() {
-        Course course = new Course();
-
-        course.setName("Test Course");
-        course.setDescription("Test Course Description");
+        Course course = Course.builder()
+                .name("Test Course")
+                .description("Test Course Description")
+                .build();
 
         dao.create(course);
-        List<Course> courses = dao.getAll();
 
-        assertFalse(courses.isEmpty());
-        assertTrue(courses.stream().anyMatch(c -> c.getName().equals("Test Course")));
+        int expected = 1;
+        int actualName = JdbcTestUtils.countRowsInTableWhere(
+                jdbcTemplate,
+                "courses",
+                "course_name = 'Test Course'");
+
+        int actualDescription = JdbcTestUtils.countRowsInTableWhere(
+                jdbcTemplate,
+                "courses",
+                "course_description = 'Test Course Description'");
+
+        assertEquals(expected, actualName);
+        assertEquals(expected, actualDescription);
+
     }
 
     @Test
     void testUpdate() {
-        Course course = new Course();
-        course.setId(1);
-        course.setName("Updated Course Name");
-        course.setDescription("Updated Course Description");
+        Course course = Course.builder()
+                .id(1)
+                .name("Updated Course Name")
+                .description("Updated Course Description")
+                .build();
 
         dao.update(course);
 
-        List<Course> allCourses = dao.getAll();
+        int expected = 1;
+        int actualName = JdbcTestUtils.countRowsInTableWhere(
+                jdbcTemplate,
+                "courses",
+                "course_id = 1 AND course_name = 'Updated Course Name'");
 
-        Course updatedCourse = allCourses.stream()
-                .filter(c -> c.getId() == 1)
-                .findFirst()
-                .orElse(null);
+        int actualDescription = JdbcTestUtils.countRowsInTableWhere(
+                jdbcTemplate,
+                "courses",
+                "course_id = 1 AND course_description = 'Updated Course Description'");
 
-        assertEquals("Updated Course Name", updatedCourse.getName());
-        assertEquals("Updated Course Description", updatedCourse.getDescription());
+        assertEquals(expected, actualName);
+        assertEquals(expected, actualDescription);
     }
 
     @Test
     void testDelete() {
-        int initialSize = dao.getAll().size();
+        int expected = JdbcTestUtils.countRowsInTable(jdbcTemplate, "courses") - 1;
+
         dao.deleteById(1);
+        int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "courses");
 
-        int finalSize = dao.getAll().size();
-
-        assertEquals(initialSize - 1, finalSize);
+        assertEquals(expected, actual);
     }
 
 }

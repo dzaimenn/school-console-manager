@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.jdbc.JdbcTestUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +29,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class JdbcStudentDaoTest {
 
     @Autowired
-    private StudentDao studentDao;
+    private StudentDao dao;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     private List<Student> prepareExpectedStudents() {
         List<Student> expectedStudents = new ArrayList<>();
@@ -41,40 +46,79 @@ class JdbcStudentDaoTest {
     @Test
     void testGetAll() {
         List<Student> expected = prepareExpectedStudents();
-        List<Student> actual = studentDao.getAll();
+        List<Student> actual = dao.getAll();
 
         assertEquals(expected, actual);
     }
 
     @Test
     void testCreate() {
-
         Student student = Student.builder()
                 .firstName("Alice")
                 .lastName("Smith")
                 .build();
 
-        studentDao.create(student);
-        List<Student> students = studentDao.getAll();
+        dao.create(student);
 
-        assertEquals(4, students.size());
+        int expected = 1;
+        int actualFirstName = JdbcTestUtils.countRowsInTableWhere(
+                jdbcTemplate,
+                "students",
+                "first_name = 'Alice'");
+
+        int actualLastName = JdbcTestUtils.countRowsInTableWhere(
+                jdbcTemplate,
+                "students",
+                "last_name = 'Smith'");
+
+        assertEquals(expected, actualFirstName);
+        assertEquals(expected, actualLastName);
     }
 
     @Test
-    void testDeleteById() {
-        studentDao.deleteById(3);
+    void testUpdate() {
+        Student student = Student.builder()
+                .studentId(1)
+                .firstName("Alice")
+                .lastName("Smith")
+                .build();
 
-        List<Student> students = studentDao.getAll();
+        dao.update(student);
 
-        assertEquals(2, students.size());
+        int expected = 1;
+        int actualFirstName = JdbcTestUtils.countRowsInTableWhere(
+                jdbcTemplate,
+                "students",
+                "student_id = 1 AND first_name = 'Alice'");
+
+        int actualLastName = JdbcTestUtils.countRowsInTableWhere(
+                jdbcTemplate,
+                "students",
+                "student_id = 1 AND last_name = 'Smith'");
+
+        assertEquals(expected, actualFirstName);
+        assertEquals(expected, actualLastName);
+    }
+
+    @Test
+    void testDelete() {
+        int expected = JdbcTestUtils.countRowsInTable(jdbcTemplate, "students") - 1;
+
+        dao.deleteById(1);
+        int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "students");
+
+        assertEquals(expected, actual);
     }
 
     @Test
     void testFindStudentsByCourseName() {
         String courseName = "Java Basics";
-        List<Student> students = studentDao.findByCourseName(courseName);
+        List<Student> students = dao.findByCourseName(courseName);
 
-        assertEquals(2, students.size());
+        int expected = 2;
+        int actual = students.size();
+
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -82,10 +126,13 @@ class JdbcStudentDaoTest {
         int studentId = 2;
         int courseId = 1;
 
-        studentDao.addToCourse(studentId, courseId);
-        List<Student> students = studentDao.findByCourseName("Java Basics");
+        dao.addToCourse(studentId, courseId);
+        List<Student> students = dao.findByCourseName("Java Basics");
 
-        assertEquals(3, students.size());
+        int expected = 3;
+        int actual = students.size();
+
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -93,17 +140,21 @@ class JdbcStudentDaoTest {
         int studentIdToRemoveFromCourse = 1;
         int courseId = 1;
 
-        studentDao.removeFromCourse(studentIdToRemoveFromCourse, courseId);
-        List<Student> students = studentDao.findByCourseName("Java Basics");
+        dao.removeFromCourse(studentIdToRemoveFromCourse, courseId);
+        List<Student> students = dao.findByCourseName("Java Basics");
 
-        assertEquals(1, students.size());
+        int expected = 1;
+        int actual = students.size();
+
+        assertEquals(expected, actual);
     }
 
     @Test
     void testGetNumberOfStudents() {
-        int totalStudents = studentDao.getTotalNumber();
+        int expected = 3;
+        int actual = dao.getTotalNumber();
 
-        assertEquals(3, totalStudents);
+        assertEquals(expected, actual);
     }
 
 }

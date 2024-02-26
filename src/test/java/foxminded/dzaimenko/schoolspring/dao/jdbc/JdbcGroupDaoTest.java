@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.jdbc.JdbcTestUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +29,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class JdbcGroupDaoTest {
 
     @Autowired
-    private GroupDao groupDao;
+    private GroupDao dao;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     private List<Group> prepareExpectedGroups() {
         List<Group> expectedGroups = new ArrayList<>();
@@ -40,53 +45,60 @@ class JdbcGroupDaoTest {
     @Test
     void testGetAll() {
         List<Group> expected = prepareExpectedGroups();
-        List<Group> actual = groupDao.getAll();
+        List<Group> actual = dao.getAll();
 
         assertEquals(expected, actual);
     }
 
     @Test
     void testCreate() {
-        Group newGroup = new Group();
-        newGroup.setName("C");
-        groupDao.create(newGroup);
+        Group newGroup = Group.builder()
+                .name("C")
+                .build();
 
-        List<Group> groups = groupDao.getAll();
+        dao.create(newGroup);
 
-        assertEquals(3, groups.size());
+        int expected = 1;
+        int actualName = JdbcTestUtils.countRowsInTableWhere(
+                jdbcTemplate,
+                "groups",
+                "group_name = 'C'");
+
+        assertEquals(expected, actualName);
     }
 
     @Test
     void testUpdate() {
-        Group group = new Group();
-        group.setId(1);
-        group.setName("NewGroupName");
+        Group group = Group.builder()
+                .id(1)
+                .name("NewGroupName")
+                .build();
 
-        groupDao.update(group);
+        dao.update(group);
 
-        List<Group> allGroups = groupDao.getAll();
+        int expected = 1;
+        int actualName = JdbcTestUtils.countRowsInTableWhere(
+                jdbcTemplate,
+                "groups",
+                "group_id = 1 AND group_name = 'NewGroupName'");
 
-        Group updatedGroup = allGroups.stream()
-                .filter(g -> g.getId() == 1)
-                .findFirst()
-                .orElse(null);
-
-        assertEquals("NewGroupName", updatedGroup.getName());
+        assertEquals(expected, actualName);
     }
 
     @Test
-    void testDeleteById() {
-        groupDao.deleteById(1);
+    void testDelete() {
+        int expected = JdbcTestUtils.countRowsInTable(jdbcTemplate, "groups") - 1;
 
-        List<Group> groups = groupDao.getAll();
+        dao.deleteById(1);
+        int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "groups");
 
-        assertEquals(1, groups.size());
+        assertEquals(expected, actual);
     }
 
     @Test
     void testFindGroupsWithMaxStudentCount() {
         int maxStudentCount = 1;
-        List<Group> groups = groupDao.findWithMaxStudentCount(maxStudentCount);
+        List<Group> groups = dao.findWithMaxStudentCount(maxStudentCount);
 
         assertEquals(1, groups.size());
     }
