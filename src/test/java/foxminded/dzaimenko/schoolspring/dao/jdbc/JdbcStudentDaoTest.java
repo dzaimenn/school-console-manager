@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql(
         scripts = {"classpath:/sql/drop_test_tables.sql",
-                "classpath:/sql/create_test_tables.sql",
+                "classpath:/db/migration/V1__Create_Tables.sql",
                 "classpath:/sql/insert_test_data.sql"},
 
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
