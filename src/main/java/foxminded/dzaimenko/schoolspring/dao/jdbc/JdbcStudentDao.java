@@ -25,7 +25,7 @@ public class JdbcStudentDao implements StudentDao {
     private static final String SQL_DELETE_STUDENT_BY_ID = "DELETE FROM students WHERE student_id = ?";
 
     private static final String SQL_FIND_STUDENTS_BY_COURSE = """
-            SELECT students.student_id, students.first_name, students.last_name
+            SELECT students.student_id, students.group_id, students.first_name, students.last_name
             FROM students
             JOIN student_courses ON students.student_id = student_courses.student_id
             JOIN courses ON student_courses.course_id = courses.course_id

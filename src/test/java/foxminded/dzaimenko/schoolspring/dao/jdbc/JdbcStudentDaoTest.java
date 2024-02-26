@@ -31,9 +31,9 @@ class JdbcStudentDaoTest {
 
     private List<Student> prepareExpectedStudents() {
         List<Student> expectedStudents = new ArrayList<>();
-        expectedStudents.add(Student.builder().groupId(1).firstName("Alex").lastName("Williams").build());
-        expectedStudents.add(Student.builder().groupId(1).firstName("Eva").lastName("Miller").build());
-        expectedStudents.add(Student.builder().groupId(2).firstName("Leon").lastName("Kennedy").build());
+        expectedStudents.add(Student.builder().studentId(1).groupId(1).firstName("Alex").lastName("Williams").build());
+        expectedStudents.add(Student.builder().studentId(2).groupId(1).firstName("Eva").lastName("Miller").build());
+        expectedStudents.add(Student.builder().studentId(3).groupId(2).firstName("Leon").lastName("Kennedy").build());
 
         return expectedStudents;
     }
