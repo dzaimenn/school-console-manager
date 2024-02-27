@@ -13,7 +13,7 @@ public class StudentRowMapper implements RowMapper<Student> {
     @Override
     public Student mapRow(ResultSet rs, int rowNum) throws SQLException {
         return Student.builder()
-                .studentId(rs.getInt("student_id"))
+                .id(rs.getInt("student_id"))
                 .groupId(rs.getInt("group_id"))
                 .firstName(rs.getString("first_name"))
                 .lastName(rs.getString("last_name"))

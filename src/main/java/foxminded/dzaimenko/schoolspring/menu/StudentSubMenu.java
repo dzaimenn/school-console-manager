@@ -27,10 +27,10 @@ public class StudentSubMenu {
             """;
     private final Scanner scanner = new Scanner(System.in);
 
-    private final StudentDao studentDAO;
+    private final StudentDao studentDao;
 
-    public StudentSubMenu(StudentDao studentDAO) {
-        this.studentDAO = studentDAO;
+    public StudentSubMenu(StudentDao studentDao) {
+        this.studentDao = studentDao;
     }
 
     public void displayMenu() {
@@ -76,9 +76,9 @@ public class StudentSubMenu {
     }
 
     private void showAllStudents() {
-        List<Student> students = studentDAO.getAll();
+        List<Student> students = studentDao.getAll();
         for (Student student : students) {
-            System.out.println(student.getStudentId() + ". " + student.getFirstName() + " " + student.getLastName());
+            System.out.println(student.getId() + ". " + student.getFirstName() + " " + student.getLastName());
         }
     }
 
@@ -94,7 +94,7 @@ public class StudentSubMenu {
                 .lastName(lastName)
                 .build();
 
-        studentDAO.create(student);
+        studentDao.create(student);
         System.out.println("Student added successfully.");
     }
 
@@ -110,12 +110,12 @@ public class StudentSubMenu {
         String newLastName = scanner.nextLine();
 
         Student updatedStudent = Student.builder()
-                .studentId(studentId)
+                .id(studentId)
                 .firstName(newFirstName)
                 .lastName(newLastName)
                 .build();
 
-        studentDAO.update(updatedStudent);
+        studentDao.update(updatedStudent);
 
         System.out.println("Student information updated successfully.");
     }
@@ -125,12 +125,12 @@ public class StudentSubMenu {
         int studentId = scanner.nextInt();
         scanner.nextLine();
 
-        Optional<Student> optionalStudent = studentDAO.findById(studentId);
+        Optional<Student> optionalStudent = studentDao.findById(studentId);
 
         optionalStudent.ifPresentOrElse(
                 student -> {
                     System.out.println("Student found:");
-                    System.out.println("ID: " + student.getStudentId());
+                    System.out.println("ID: " + student.getId());
                     System.out.println("First Name: " + student.getFirstName());
                     System.out.println("Last Name: " + student.getLastName());
                     System.out.println("Group ID: " + student.getGroupId());
@@ -143,7 +143,7 @@ public class StudentSubMenu {
         System.out.println("Enter the ID of the student to delete:");
         int id = scanner.nextInt();
 
-        studentDAO.deleteById(id);
+        studentDao.deleteById(id);
         System.out.println("Student deleted successfully.");
     }
 
@@ -151,7 +151,7 @@ public class StudentSubMenu {
         System.out.println("Enter the name of the course:");
         String courseName = scanner.nextLine();
 
-        List<Student> students = studentDAO.findByCourseName(courseName);
+        List<Student> students = studentDao.findByCourseName(courseName);
         for (Student student : students) {
             System.out.println(student);
         }
@@ -164,7 +164,7 @@ public class StudentSubMenu {
         System.out.println("Enter the ID of the course:");
         int courseId = scanner.nextInt();
 
-        studentDAO.addToCourse(studentId, courseId);
+        studentDao.addToCourse(studentId, courseId);
         System.out.println("Student added to the course successfully.");
     }
 
@@ -175,12 +175,12 @@ public class StudentSubMenu {
         System.out.println("Enter the ID of the course:");
         int courseId = scanner.nextInt();
 
-        studentDAO.removeFromCourse(studentId, courseId);
+        studentDao.removeFromCourse(studentId, courseId);
         System.out.println("Student removed from the course successfully.");
     }
 
     private void showTotalNumberOfStudents() {
-        int totalStudents = studentDAO.getTotalNumber();
+        int totalStudents = studentDao.getTotalNumber();
         System.out.println("Total number of students: " + totalStudents);
     }
 

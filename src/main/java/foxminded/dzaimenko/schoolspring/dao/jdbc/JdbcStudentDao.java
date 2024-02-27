@@ -4,8 +4,12 @@ import foxminded.dzaimenko.schoolspring.dao.StudentDao;
 import foxminded.dzaimenko.schoolspring.dao.jdbc.rowmapper.StudentRowMapper;
 import foxminded.dzaimenko.schoolspring.model.Student;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,7 +18,7 @@ public class JdbcStudentDao implements StudentDao {
 
     private static final String SQL_SELECT_ALL_STUDENTS = "SELECT * FROM students";
 
-    private static final String SQL_CREATE_STUDENT = "INSERT INTO students (first_name, last_name) VALUES (?,?) RETURNING student_id";
+    private static final String SQL_CREATE_STUDENT = "INSERT INTO students (first_name, last_name) VALUES (?,?)";
 
     private static final String SQL_UPDATE_STUDENT = "UPDATE students SET first_name = ?, last_name = ? WHERE student_id = ?";
 
@@ -58,13 +62,27 @@ public class JdbcStudentDao implements StudentDao {
     }
 
     @Override
-    public Integer create(Student student) {
-        return jdbcTemplate.queryForObject(SQL_CREATE_STUDENT, Integer.class, student.getFirstName(), student.getLastName());
+    public void create(Student student) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(SQL_CREATE_STUDENT, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, student.getFirstName());
+            ps.setString(2, student.getLastName());
+            return ps;
+        }, keyHolder);
+
+        Number key = keyHolder.getKey();
+        if (key != null) {
+            student.setId(key.intValue());
+        } else {
+            throw new RuntimeException("Failed to retrieve generated key");
+        }
     }
 
     @Override
     public void update(Student student) {
-        jdbcTemplate.update(SQL_UPDATE_STUDENT, student.getFirstName(), student.getLastName(), student.getStudentId());
+        jdbcTemplate.update(SQL_UPDATE_STUDENT, student.getFirstName(), student.getLastName(), student.getId());
     }
 
     @Override

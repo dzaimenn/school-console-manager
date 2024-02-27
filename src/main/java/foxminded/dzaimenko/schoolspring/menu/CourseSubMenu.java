@@ -24,10 +24,10 @@ public class CourseSubMenu {
 
     private final Scanner scanner = new Scanner(System.in);
 
-    private final CourseDao courseDAO;
+    private final CourseDao courseDao;
 
-    public CourseSubMenu(CourseDao courseDAO) {
-        this.courseDAO = courseDAO;
+    public CourseSubMenu(CourseDao courseDao) {
+        this.courseDao = courseDao;
     }
 
     public void displayMenu() {
@@ -61,7 +61,7 @@ public class CourseSubMenu {
     }
 
     private void showAllCourses() {
-        List<Course> courses = courseDAO.getAll();
+        List<Course> courses = courseDao.getAll();
         for (Course course : courses) {
             System.out.println(course.getId() + ". " + course.getName() + " - " + course.getDescription());
         }
@@ -76,7 +76,7 @@ public class CourseSubMenu {
 
         Course newCourse = Course.builder().name(name).description(description).build();
 
-        courseDAO.create(newCourse);
+        courseDao.create(newCourse);
 
         System.out.println("New course created successfully.");
     }
@@ -94,7 +94,7 @@ public class CourseSubMenu {
 
         Course updatedCourse = Course.builder().id(courseId).name(newName).description(newDescription).build();
 
-        courseDAO.update(updatedCourse);
+        courseDao.update(updatedCourse);
 
         System.out.println("Course information updated successfully.");
     }
@@ -104,7 +104,7 @@ public class CourseSubMenu {
         int courseId = scanner.nextInt();
         scanner.nextLine();
 
-        Optional<Course> optionalCourse = courseDAO.findById(courseId);
+        Optional<Course> optionalCourse = courseDao.findById(courseId);
 
         if (optionalCourse.isPresent()) {
             Course course = optionalCourse.get();
@@ -119,7 +119,7 @@ public class CourseSubMenu {
         int courseIdToDelete = scanner.nextInt();
         scanner.nextLine();
 
-        courseDAO.deleteById(courseIdToDelete);
+        courseDao.deleteById(courseIdToDelete);
 
         System.out.println("Course with ID " + courseIdToDelete + " deleted successfully.");
     }

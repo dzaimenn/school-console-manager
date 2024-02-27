@@ -4,8 +4,12 @@ import foxminded.dzaimenko.schoolspring.dao.GroupDao;
 import foxminded.dzaimenko.schoolspring.dao.jdbc.rowmapper.GroupRowMapper;
 import foxminded.dzaimenko.schoolspring.model.Group;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,7 +18,7 @@ public class JdbcGroupDao implements GroupDao {
 
     private static final String SQL_SELECT_ALL_GROUPS = "SELECT * FROM groups";
 
-    private static final String SQL_CREATE_GROUP = "INSERT INTO groups (group_name) VALUES (?) RETURNING group_id";
+    private static final String SQL_CREATE_GROUP = "INSERT INTO groups (group_name) VALUES (?)";
 
     private static final String SQL_UPDATE_GROUP = "UPDATE groups SET group_name = ? WHERE group_id = ?";
 
@@ -44,8 +48,21 @@ public class JdbcGroupDao implements GroupDao {
     }
 
     @Override
-    public Integer create(Group group) {
-       return jdbcTemplate.queryForObject(SQL_CREATE_GROUP, Integer.class, group.getName());
+    public void create(Group group) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(SQL_CREATE_GROUP, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, group.getName());
+            return ps;
+        }, keyHolder);
+
+        Number key = keyHolder.getKey();
+        if (key != null) {
+            group.setId(key.intValue());
+        } else {
+            throw new RuntimeException("Failed to retrieve generated key");
+        }
     }
 
     @Override

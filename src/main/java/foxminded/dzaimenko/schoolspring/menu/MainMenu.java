@@ -1,6 +1,6 @@
 package foxminded.dzaimenko.schoolspring.menu;
 
-import foxminded.dzaimenko.schoolspring.util.DatabaseFiller;
+import foxminded.dzaimenko.schoolspring.util.DataGenerator;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 
@@ -21,18 +21,18 @@ public class MainMenu {
     private final StudentSubMenu studentSubMenu;
     private final GroupSubMenu groupSubMenu;
     private final CourseSubMenu courseSubMenu;
-    private final DatabaseFiller databaseFiller;
+    private final DataGenerator dataGenerator;
 
-    public MainMenu(StudentSubMenu studentSubMenu, GroupSubMenu groupSubMenu, CourseSubMenu courseSubMenu, DatabaseFiller databaseFiller) {
+    public MainMenu(StudentSubMenu studentSubMenu, GroupSubMenu groupSubMenu, CourseSubMenu courseSubMenu, DataGenerator dataGenerator) {
         this.studentSubMenu = studentSubMenu;
         this.groupSubMenu = groupSubMenu;
         this.courseSubMenu = courseSubMenu;
-        this.databaseFiller = databaseFiller;
+        this.dataGenerator = dataGenerator;
     }
 
     @PostConstruct
     public void displayMainMenu() {
-        databaseFiller.fillDataBase();
+        dataGenerator.fillTables();
 
         while (true) {
             System.out.println(MAIN_MENU_REQUEST);

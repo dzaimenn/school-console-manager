@@ -24,10 +24,10 @@ public class GroupSubMenu {
             """;
 
     private final Scanner scanner = new Scanner(System.in);
-    private final GroupDao groupDAO;
+    private final GroupDao groupDao;
 
-    public GroupSubMenu(GroupDao groupDAO) {
-        this.groupDAO = groupDAO;
+    public GroupSubMenu(GroupDao groupDao) {
+        this.groupDao = groupDao;
     }
 
     public void displayMenu() {
@@ -64,7 +64,7 @@ public class GroupSubMenu {
     }
 
     private void showAllGroups() {
-        List<Group> groups = groupDAO.getAll();
+        List<Group> groups = groupDao.getAll();
         for (Group group : groups) {
             System.out.println(group.getId() + ". " + group.getName());
         }
@@ -78,7 +78,7 @@ public class GroupSubMenu {
                 .name(groupName)
                 .build();
 
-        groupDAO.create(newGroup);
+        groupDao.create(newGroup);
         System.out.println("New group created successfully.");
     }
 
@@ -95,7 +95,7 @@ public class GroupSubMenu {
                 .name(newGroupName)
                 .build();
 
-        groupDAO.update(updatedGroup);
+        groupDao.update(updatedGroup);
         System.out.println("Group information updated successfully.");
     }
 
@@ -104,7 +104,7 @@ public class GroupSubMenu {
         int groupId = scanner.nextInt();
         scanner.nextLine();
 
-        Optional<Group> optionalGroup = groupDAO.findById(groupId);
+        Optional<Group> optionalGroup = groupDao.findById(groupId);
 
         if (optionalGroup.isPresent()) {
             Group group = optionalGroup.get();
@@ -119,7 +119,7 @@ public class GroupSubMenu {
         int groupId = scanner.nextInt();
         scanner.nextLine();
 
-        groupDAO.deleteById(groupId);
+        groupDao.deleteById(groupId);
         System.out.println("Group deleted successfully.");
     }
 
@@ -128,7 +128,7 @@ public class GroupSubMenu {
         int maxStudentCount = scanner.nextInt();
         scanner.nextLine();
 
-        List<Group> groups = groupDAO.findWithMaxStudentCount(maxStudentCount);
+        List<Group> groups = groupDao.findWithMaxStudentCount(maxStudentCount);
 
         if (groups.isEmpty()) {
             System.out.println("No groups found with less or equal students' number.");

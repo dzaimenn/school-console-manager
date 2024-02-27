@@ -8,40 +8,42 @@ import foxminded.dzaimenko.schoolspring.model.Group;
 import foxminded.dzaimenko.schoolspring.model.Student;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
 @Component
-public class DatabaseFiller {
+public class DataGenerator {
     private final Random random = new Random();
     private final CourseDao courseDao;
     private final GroupDao groupDao;
     private final StudentDao studentDao;
 
-    public DatabaseFiller(CourseDao courseDao, GroupDao groupDao, StudentDao studentDao) {
+    public DataGenerator(CourseDao courseDao, GroupDao groupDao, StudentDao studentDao) {
         this.courseDao = courseDao;
         this.groupDao = groupDao;
         this.studentDao = studentDao;
     }
 
-    public void fillDataBase() {
-        groupsTableFill();
-        studentsTableFill();
-        coursesTableFill();
-        studentsCoursesTableFill();
+    public void fillTables() {
+        generateGroups();
+        generateStudents();
+        generateCourses();
+        generateStudentsCourses();
         System.out.println("Database filled successfully");
     }
 
-    private void groupsTableFill() {
+    private List<Group> generateGroups() {
+        List<Group> groups = new ArrayList<>();
 
         for (int i = 0; i < 10; i++) {
             String groupName = SchoolData.groupsNames[i];
             Group group = new Group();
             group.setName(groupName);
 
-            group.setId(groupDao.create(group));
+
         }
     }
 
@@ -60,7 +62,7 @@ public class DatabaseFiller {
         return uniqueStudents;
     }
 
-    private void studentsTableFill() {
+    private void generateStudents() {
         Set<String> uniqueStudents = generateUniqueStudentsSet();
         List<Group> groups = groupDao.getAll();
 
@@ -72,15 +74,16 @@ public class DatabaseFiller {
             String lastName = nameParts[1];
 
             Student student = new Student();
-            student.setStudentId(groupId);
+            student.setId(groupId);
             student.setFirstName(firstName);
             student.setLastName(lastName);
 
-            student.setStudentId(studentDao.create(student));
+            student.setId(studentDao.create(student));
         }
     }
 
-    private void coursesTableFill() {
+    private List<Course> generateCourses() {
+        List<Course> courses = new ArrayList<>();
 
         for (int i = 0; i < 10; i++) {
             String courseName = SchoolData.coursesNames[i];
@@ -90,13 +93,16 @@ public class DatabaseFiller {
             course.setName(courseName);
             course.setDescription(courseDescription);
 
-            course.setId(courseDao.create(course));
+            courseDao.create(course);
+
+            courses.add(course);
         }
+        return courses;
     }
 
-    private void studentsCoursesTableFill() {
+    private void generateStudentsCourses() {
         List<Student> students = studentDao.getAll();
-        List<Course> courses = courseDao.getAll();
+        List<Course> courses = generateCourses();
 
         for (Student student : students) {
             assignRandomCourses(student, courses);
@@ -113,7 +119,7 @@ public class DatabaseFiller {
             Course course = courses.get(randomIndex);
 
             if (assignedCourseIds.add(course.getId())) {
-                studentDao.addToCourse(student.getStudentId(), course.getId());
+                studentDao.addToCourse(student.getId(), course.getId());
             }
         }
     }
