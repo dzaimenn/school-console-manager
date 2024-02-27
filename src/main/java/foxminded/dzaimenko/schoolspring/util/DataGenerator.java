@@ -16,6 +16,12 @@ import java.util.Set;
 
 @Component
 public class DataGenerator {
+    private static final int NUM_UNIQUE_FIRST_NAMES = 20;
+    private static final int NUM_UNIQUE_LAST_NAMES = 20;
+    private static final int NUM_UNIQUE_STUDENTS = 200;
+    private static final int NUM_UNIQUE_GROUPS = 10;
+    private static final int NUM_UNIQUE_COURSES = 10;
+
     private final Random random = new Random();
     private final CourseDao courseDao;
     private final GroupDao groupDao;
@@ -28,31 +34,35 @@ public class DataGenerator {
     }
 
     public void fillTables() {
-        generateGroups();
-        generateStudents();
-        generateCourses();
-        generateStudentsCourses();
+        List<Group> groups = generateGroups();
+        List<Student> students = generateStudents(groups);
+        List<Course> courses = generateCourses();
+        generateStudentsToCourses(students, courses);
+
         System.out.println("Database filled successfully");
     }
 
     private List<Group> generateGroups() {
         List<Group> groups = new ArrayList<>();
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < NUM_UNIQUE_GROUPS; i++) {
             String groupName = SchoolData.groupsNames[i];
+
             Group group = new Group();
             group.setName(groupName);
 
-
+            groupDao.create(group);
+            groups.add(group);
         }
+        return groups;
     }
 
     private Set<String> generateUniqueStudentsSet() {
         Set<String> uniqueStudents = new HashSet<>();
 
-        while (uniqueStudents.size() < 200) {
-            String firstName = SchoolData.firstNamesArray[random.nextInt(20)];
-            String lastName = SchoolData.lastNamesArray[random.nextInt(20)];
+        while (uniqueStudents.size() < NUM_UNIQUE_STUDENTS) {
+            String firstName = SchoolData.firstNamesArray[random.nextInt(NUM_UNIQUE_FIRST_NAMES)];
+            String lastName = SchoolData.lastNamesArray[random.nextInt(NUM_UNIQUE_LAST_NAMES)];
 
             String uniqueKey = firstName + " " + lastName;
 
@@ -62,30 +72,32 @@ public class DataGenerator {
         return uniqueStudents;
     }
 
-    private void generateStudents() {
+    private List<Student> generateStudents(List<Group> groups) {
+        List<Student> students = new ArrayList<>();
         Set<String> uniqueStudents = generateUniqueStudentsSet();
-        List<Group> groups = groupDao.getAll();
 
         for (String uniqueKey : uniqueStudents) {
-            Integer groupId = groups.get(random.nextInt(10)).getId();
+            Integer groupId = groups.get(random.nextInt(NUM_UNIQUE_GROUPS)).getId();
 
             String[] nameParts = uniqueKey.split(" ");
             String firstName = nameParts[0];
             String lastName = nameParts[1];
 
             Student student = new Student();
-            student.setId(groupId);
+            student.setGroupId(groupId);
             student.setFirstName(firstName);
             student.setLastName(lastName);
 
-            student.setId(studentDao.create(student));
+            studentDao.create(student);
+            students.add(student);
         }
+        return students;
     }
 
     private List<Course> generateCourses() {
         List<Course> courses = new ArrayList<>();
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < NUM_UNIQUE_COURSES; i++) {
             String courseName = SchoolData.coursesNames[i];
             String courseDescription = SchoolData.coursesDescriptions[i];
 
@@ -94,16 +106,12 @@ public class DataGenerator {
             course.setDescription(courseDescription);
 
             courseDao.create(course);
-
             courses.add(course);
         }
         return courses;
     }
 
-    private void generateStudentsCourses() {
-        List<Student> students = studentDao.getAll();
-        List<Course> courses = generateCourses();
-
+    private void generateStudentsToCourses(List<Student> students, List<Course> courses) {
         for (Student student : students) {
             assignRandomCourses(student, courses);
         }
