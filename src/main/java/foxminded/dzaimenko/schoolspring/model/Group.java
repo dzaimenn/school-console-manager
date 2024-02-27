@@ -2,17 +2,13 @@ package foxminded.dzaimenko.schoolspring.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
+@Data
 @Builder
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 public class Group {
 
     private Integer id;
