@@ -6,6 +6,8 @@ import foxminded.dzaimenko.schoolspring.dao.StudentDao;
 import foxminded.dzaimenko.schoolspring.model.Course;
 import foxminded.dzaimenko.schoolspring.model.Group;
 import foxminded.dzaimenko.schoolspring.model.Student;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -15,12 +17,23 @@ import java.util.Random;
 import java.util.Set;
 
 @Component
+@PropertySource("classpath:constants.yml")
 public class DataGenerator {
-    private static final int NUM_UNIQUE_FIRST_NAMES = 20;
-    private static final int NUM_UNIQUE_LAST_NAMES = 20;
-    private static final int NUM_UNIQUE_STUDENTS = 200;
-    private static final int NUM_UNIQUE_GROUPS = 10;
-    private static final int NUM_UNIQUE_COURSES = 10;
+
+    @Value("${num_unique_first_names}")
+    private int numUniqueFirstNames;
+
+    @Value("${num_unique_last_names}")
+    private int numUniqueLastNames;
+
+    @Value("${num_unique_students}")
+    private int numUniqueStudents;
+
+    @Value("${num_unique_groups}")
+    private int numUniqueGroups;
+
+    @Value("${num_unique_courses}")
+    private int numUniqueCourses;
 
     private final Random random = new Random();
     private final CourseDao courseDao;
@@ -45,7 +58,7 @@ public class DataGenerator {
     private List<Group> generateGroups() {
         List<Group> groups = new ArrayList<>();
 
-        for (int i = 0; i < NUM_UNIQUE_GROUPS; i++) {
+        for (int i = 0; i < numUniqueGroups; i++) {
             String groupName = SchoolData.groupsNames[i];
 
             Group group = new Group();
@@ -60,9 +73,9 @@ public class DataGenerator {
     private Set<String> generateUniqueStudentsSet() {
         Set<String> uniqueStudents = new HashSet<>();
 
-        while (uniqueStudents.size() < NUM_UNIQUE_STUDENTS) {
-            String firstName = SchoolData.firstNamesArray[random.nextInt(NUM_UNIQUE_FIRST_NAMES)];
-            String lastName = SchoolData.lastNamesArray[random.nextInt(NUM_UNIQUE_LAST_NAMES)];
+        while (uniqueStudents.size() < numUniqueStudents) {
+            String firstName = SchoolData.firstNamesArray[random.nextInt(numUniqueFirstNames)];
+            String lastName = SchoolData.lastNamesArray[random.nextInt(numUniqueLastNames)];
 
             String uniqueKey = firstName + " " + lastName;
 
@@ -77,7 +90,7 @@ public class DataGenerator {
         Set<String> uniqueStudents = generateUniqueStudentsSet();
 
         for (String uniqueKey : uniqueStudents) {
-            Integer groupId = groups.get(random.nextInt(NUM_UNIQUE_GROUPS)).getId();
+            Integer groupId = groups.get(random.nextInt(numUniqueGroups)).getId();
 
             String[] nameParts = uniqueKey.split(" ");
             String firstName = nameParts[0];
@@ -97,7 +110,7 @@ public class DataGenerator {
     private List<Course> generateCourses() {
         List<Course> courses = new ArrayList<>();
 
-        for (int i = 0; i < NUM_UNIQUE_COURSES; i++) {
+        for (int i = 0; i < numUniqueCourses; i++) {
             String courseName = SchoolData.coursesNames[i];
             String courseDescription = SchoolData.coursesDescriptions[i];
 

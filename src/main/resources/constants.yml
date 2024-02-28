@@ -1,0 +1,5 @@
+num_unique_first_names: 20
+num_unique_last_names: 20
+num_unique_students: 200
+num_unique_groups: 10
+num_unique_courses: 10
