@@ -18,9 +18,9 @@ public class JdbcStudentDao implements StudentDao {
 
     private static final String SQL_SELECT_ALL_STUDENTS = "SELECT * FROM students";
 
-    private static final String SQL_CREATE_STUDENT = "INSERT INTO students (group_id, first_name, last_name) VALUES (?,?,?)";
+    private static final String SQL_CREATE_STUDENT = "INSERT INTO students (group_id, first_name, last_name) VALUES (?,?,?) RETURNING student_id";
 
-    private static final String SQL_UPDATE_STUDENT = "UPDATE students SET first_name = ?, last_name = ? WHERE student_id = ? RETURNING student_id";
+    private static final String SQL_UPDATE_STUDENT = "UPDATE students SET first_name = ?, last_name = ? WHERE student_id = ?";
 
     private static final String SQL_SELECT_STUDENT_BY_ID = "SELECT * FROM students WHERE student_id = ?";
 
