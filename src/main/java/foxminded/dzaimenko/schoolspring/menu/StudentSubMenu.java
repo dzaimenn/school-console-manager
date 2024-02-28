@@ -89,7 +89,7 @@ public class StudentSubMenu {
         System.out.println("Enter the last name of the student:");
         String lastName = scanner.nextLine();
 
-        System.out.println("EEnter group ID:");
+        System.out.println("Enter group ID:");
         Integer groupId = scanner.nextInt();
 
         Student student = Student.builder()
