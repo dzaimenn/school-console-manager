@@ -34,18 +34,13 @@ class JdbcStudentDaoTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private List<Student> prepareExpectedStudents() {
-        List<Student> expectedStudents = new ArrayList<>();
-        expectedStudents.add(Student.builder().id(1).groupId(1).firstName("Alex").lastName("Williams").build());
-        expectedStudents.add(Student.builder().id(2).groupId(1).firstName("Eva").lastName("Miller").build());
-        expectedStudents.add(Student.builder().id(3).groupId(2).firstName("Leon").lastName("Kennedy").build());
-
-        return expectedStudents;
-    }
-
     @Test
     void testGetAll() {
-        List<Student> expected = prepareExpectedStudents();
+        List<Student> expected = new ArrayList<>();
+        expected.add(Student.builder().id(1).groupId(1).firstName("Alex").lastName("Williams").build());
+        expected.add(Student.builder().id(2).groupId(1).firstName("Eva").lastName("Miller").build());
+        expected.add(Student.builder().id(3).groupId(2).firstName("Leon").lastName("Kennedy").build());
+
         List<Student> actual = dao.getAll();
 
         assertEquals(expected, actual);
@@ -54,50 +49,39 @@ class JdbcStudentDaoTest {
     @Test
     void testCreate() {
         Student student = Student.builder()
-                .firstName("Alice")
-                .lastName("Smith")
+                .groupId(1)
+                .firstName("NewFirstName")
+                .lastName("NewLastName")
                 .build();
 
         dao.create(student);
 
         int expected = 1;
-        int actualFirstName = JdbcTestUtils.countRowsInTableWhere(
+        int actual = JdbcTestUtils.countRowsInTableWhere(
                 jdbcTemplate,
                 "students",
-                "first_name = 'Alice'");
+                "group_id = '1' AND first_name = 'NewFirstName' AND last_name = 'NewLastName'");
 
-        int actualLastName = JdbcTestUtils.countRowsInTableWhere(
-                jdbcTemplate,
-                "students",
-                "last_name = 'Smith'");
-
-        assertEquals(expected, actualFirstName);
-        assertEquals(expected, actualLastName);
+        assertEquals(expected, actual);
     }
 
     @Test
     void testUpdate() {
         Student student = Student.builder()
                 .id(1)
-                .firstName("Alice")
-                .lastName("Smith")
+                .firstName("UpdatedFirstName")
+                .lastName("UpdatedLastName")
                 .build();
 
         dao.update(student);
 
         int expected = 1;
-        int actualFirstName = JdbcTestUtils.countRowsInTableWhere(
+        int actual = JdbcTestUtils.countRowsInTableWhere(
                 jdbcTemplate,
                 "students",
-                "student_id = 1 AND first_name = 'Alice'");
+                "student_id = 1 AND first_name = 'UpdatedFirstName' AND last_name = 'UpdatedLastName'");
 
-        int actualLastName = JdbcTestUtils.countRowsInTableWhere(
-                jdbcTemplate,
-                "students",
-                "student_id = 1 AND last_name = 'Smith'");
-
-        assertEquals(expected, actualFirstName);
-        assertEquals(expected, actualLastName);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -113,10 +97,11 @@ class JdbcStudentDaoTest {
     @Test
     void testFindStudentsByCourseName() {
         String courseName = "Java Basics";
-        List<Student> students = dao.findByCourseName(courseName);
+        List<Student> expected = new ArrayList<>();
+        expected.add(Student.builder().id(1).groupId(1).firstName("Alex").lastName("Williams").build());
+        expected.add(Student.builder().id(3).groupId(2).firstName("Leon").lastName("Kennedy").build());
 
-        int expected = 2;
-        int actual = students.size();
+        List<Student> actual = dao.findByCourseName(courseName);
 
         assertEquals(expected, actual);
     }
@@ -127,10 +112,9 @@ class JdbcStudentDaoTest {
         int courseId = 1;
 
         dao.addToCourse(studentId, courseId);
-        List<Student> students = dao.findByCourseName("Java Basics");
 
         int expected = 3;
-        int actual = students.size();
+        int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "student_courses", "course_id = " + courseId);
 
         assertEquals(expected, actual);
     }

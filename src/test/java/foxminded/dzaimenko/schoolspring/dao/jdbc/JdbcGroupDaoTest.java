@@ -34,17 +34,12 @@ class JdbcGroupDaoTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private List<Group> prepareExpectedGroups() {
-        List<Group> expectedGroups = new ArrayList<>();
-        expectedGroups.add(Group.builder().id(1).name("A").build());
-        expectedGroups.add(Group.builder().id(2).name("B").build());
-
-        return expectedGroups;
-    }
-
     @Test
     void testGetAll() {
-        List<Group> expected = prepareExpectedGroups();
+        List<Group> expected = new ArrayList<>();
+        expected.add(Group.builder().id(1).name("A").build());
+        expected.add(Group.builder().id(2).name("B").build());
+
         List<Group> actual = dao.getAll();
 
         assertEquals(expected, actual);
@@ -59,12 +54,12 @@ class JdbcGroupDaoTest {
         dao.create(newGroup);
 
         int expected = 1;
-        int actualName = JdbcTestUtils.countRowsInTableWhere(
+        int actual = JdbcTestUtils.countRowsInTableWhere(
                 jdbcTemplate,
                 "groups",
                 "group_name = 'C'");
 
-        assertEquals(expected, actualName);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -77,12 +72,12 @@ class JdbcGroupDaoTest {
         dao.update(group);
 
         int expected = 1;
-        int actualName = JdbcTestUtils.countRowsInTableWhere(
+        int actual = JdbcTestUtils.countRowsInTableWhere(
                 jdbcTemplate,
                 "groups",
                 "group_id = 1 AND group_name = 'NewGroupName'");
 
-        assertEquals(expected, actualName);
+        assertEquals(expected, actual);
     }
 
     @Test

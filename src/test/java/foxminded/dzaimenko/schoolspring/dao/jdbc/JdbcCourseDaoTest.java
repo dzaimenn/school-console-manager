@@ -34,16 +34,12 @@ class JdbcCourseDaoTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private List<Course> prepareExpectedCourses() {
-        List<Course> expectedCourses = new ArrayList<>();
-        expectedCourses.add(Course.builder().id(1).name("Java Basics").description("Introduction to Java programming").build());
-        expectedCourses.add(Course.builder().id(2).name("Databases").description("Introduction to databases").build());
-        return expectedCourses;
-    }
-
     @Test
     void testGetAll() {
-        List<Course> expected = prepareExpectedCourses();
+        List<Course> expected = new ArrayList<>();
+        expected.add(Course.builder().id(1).name("Java Basics").description("Introduction to Java programming").build());
+        expected.add(Course.builder().id(2).name("Databases").description("Introduction to databases").build());
+
         List<Course> actual = dao.getAll();
 
         assertEquals(expected, actual);
@@ -52,25 +48,19 @@ class JdbcCourseDaoTest {
     @Test
     void testCreate() {
         Course course = Course.builder()
-                .name("Test Course")
-                .description("Test Course Description")
+                .name("NewName")
+                .description("NewDescription")
                 .build();
 
         dao.create(course);
 
         int expected = 1;
-        int actualName = JdbcTestUtils.countRowsInTableWhere(
+        int actual = JdbcTestUtils.countRowsInTableWhere(
                 jdbcTemplate,
                 "courses",
-                "course_name = 'Test Course'");
+                "course_name = 'NewName' AND course_description = 'NewDescription'");
 
-        int actualDescription = JdbcTestUtils.countRowsInTableWhere(
-                jdbcTemplate,
-                "courses",
-                "course_description = 'Test Course Description'");
-
-        assertEquals(expected, actualName);
-        assertEquals(expected, actualDescription);
+        assertEquals(expected, actual);
 
     }
 
@@ -78,25 +68,19 @@ class JdbcCourseDaoTest {
     void testUpdate() {
         Course course = Course.builder()
                 .id(1)
-                .name("Updated Course Name")
-                .description("Updated Course Description")
+                .name("UpdatedName")
+                .description("UpdatedDescription")
                 .build();
 
         dao.update(course);
 
         int expected = 1;
-        int actualName = JdbcTestUtils.countRowsInTableWhere(
+        int actual = JdbcTestUtils.countRowsInTableWhere(
                 jdbcTemplate,
                 "courses",
-                "course_id = 1 AND course_name = 'Updated Course Name'");
+                "course_id = 1 AND course_name = 'UpdatedName' AND course_description = 'UpdatedDescription'");
 
-        int actualDescription = JdbcTestUtils.countRowsInTableWhere(
-                jdbcTemplate,
-                "courses",
-                "course_id = 1 AND course_description = 'Updated Course Description'");
-
-        assertEquals(expected, actualName);
-        assertEquals(expected, actualDescription);
+        assertEquals(expected, actual);
     }
 
     @Test
