@@ -18,7 +18,7 @@ public class JdbcGroupDao implements GroupDao {
 
     private static final String SQL_SELECT_ALL_GROUPS = "SELECT * FROM groups";
 
-    private static final String SQL_CREATE_GROUP = "INSERT INTO groups (group_name) VALUES (?)";
+    private static final String SQL_CREATE_GROUP = "INSERT INTO groups (group_name) VALUES (?) RETURNING group_id";
 
     private static final String SQL_UPDATE_GROUP = "UPDATE groups SET group_name = ? WHERE group_id = ?";
 

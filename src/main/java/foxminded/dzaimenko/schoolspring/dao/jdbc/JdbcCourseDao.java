@@ -20,7 +20,7 @@ public class JdbcCourseDao implements CourseDao {
 
     private static final String SQL_CREATE_COURSE = "INSERT INTO courses (course_name, course_description) VALUES (?, ?)";
 
-    private static final String SQL_UPDATE_COURSE = "UPDATE courses SET course_name = ?, course_description = ? WHERE course_id = ?";
+    private static final String SQL_UPDATE_COURSE = "UPDATE courses SET course_name = ?, course_description = ? WHERE course_id = ? RETURNING course_id";
 
     private static final String SQL_SELECT_COURSE_BY_ID = "SELECT * FROM courses WHERE course_id = ?";
 
