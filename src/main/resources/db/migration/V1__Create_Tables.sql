@@ -7,7 +7,7 @@ CREATE TABLE groups
 CREATE TABLE students
 (
     student_id SERIAL PRIMARY KEY,
-    group_id   INT,
+    group_id   INT REFERENCES groups (group_id),
     first_name VARCHAR(255),
     last_name  VARCHAR(255)
 );
