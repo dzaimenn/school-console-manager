@@ -39,6 +39,7 @@ class JdbcGroupDaoTest {
         List<Group> expected = new ArrayList<>();
         expected.add(Group.builder().id(1).name("A").build());
         expected.add(Group.builder().id(2).name("B").build());
+        expected.add(Group.builder().id(3).name("C").build());
 
         List<Group> actual = dao.getAll();
 
@@ -48,7 +49,7 @@ class JdbcGroupDaoTest {
     @Test
     void testCreate() {
         Group newGroup = Group.builder()
-                .name("C")
+                .name("NewGroup")
                 .build();
 
         dao.create(newGroup);
@@ -57,7 +58,7 @@ class JdbcGroupDaoTest {
         int actual = JdbcTestUtils.countRowsInTableWhere(
                 jdbcTemplate,
                 "groups",
-                "group_name = 'C'");
+                "group_name = 'NewGroup'");
 
         assertEquals(expected, actual);
     }
@@ -84,7 +85,7 @@ class JdbcGroupDaoTest {
     void testDelete() {
         int expected = JdbcTestUtils.countRowsInTable(jdbcTemplate, "groups") - 1;
 
-        dao.deleteById(1);
+        dao.deleteById(3);
         int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "groups");
 
         assertEquals(expected, actual);
@@ -95,7 +96,10 @@ class JdbcGroupDaoTest {
         int maxStudentCount = 1;
         List<Group> groups = dao.findWithMaxStudentCount(maxStudentCount);
 
-        assertEquals(1, groups.size());
+        int expected = 2;
+        int actual = groups.size();
+
+        assertEquals(expected, actual);
     }
 
 }

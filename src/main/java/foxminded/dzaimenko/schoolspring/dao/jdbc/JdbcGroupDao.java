@@ -3,6 +3,7 @@ package foxminded.dzaimenko.schoolspring.dao.jdbc;
 import foxminded.dzaimenko.schoolspring.dao.GroupDao;
 import foxminded.dzaimenko.schoolspring.dao.jdbc.rowmapper.GroupRowMapper;
 import foxminded.dzaimenko.schoolspring.model.Group;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -24,11 +25,9 @@ public class JdbcGroupDao implements GroupDao {
 
     private static final String SQL_SELECT_GROUP_BY_ID = "SELECT * FROM groups WHERE group_id = ?";
 
-//    private static final String SQL_DELETE_GROUP_BY_ID = "DELETE FROM groups WHERE group_id = ?";
-    private static final String SQL_DELETE_GROUP_BY_ID = """
-            UPDATE students SET group_id = NULL WHERE group_id = ?;
-            DELETE FROM groups WHERE group_id = ?;
-            """;
+    private static final String SQL_CHECK_STUDENTS_IN_GROUP = "SELECT COUNT(*) FROM students WHERE group_id = ?";
+
+    private static final String SQL_DELETE_GROUP_BY_ID = "DELETE FROM groups WHERE group_id = ?";
 
     private static final String SQL_FIND_GROUPS_WITH_MAX_STUDENT_COUNT = """
             SELECT g.group_id, g.group_name, COUNT(s.student_id) as student_count
@@ -82,7 +81,17 @@ public class JdbcGroupDao implements GroupDao {
 
     @Override
     public void deleteById(int id) {
-        jdbcTemplate.update(SQL_DELETE_GROUP_BY_ID, id, id);
+        try {
+            Integer studentCount = jdbcTemplate.queryForObject(SQL_CHECK_STUDENTS_IN_GROUP, Integer.class, id);
+            if (studentCount != null && studentCount > 0) {
+                System.out.println("Cannot delete group. There are students in the group.");
+                return;
+            }
+
+            jdbcTemplate.update(SQL_DELETE_GROUP_BY_ID, id);
+        } catch (EmptyResultDataAccessException e) {
+            System.out.println("Error while checking student count: " + e.getMessage());
+        }
     }
 
     @Override

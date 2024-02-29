@@ -141,4 +141,15 @@ class JdbcStudentDaoTest {
         assertEquals(expected, actual);
     }
 
+    @Test
+    void testGetNumberOfStudentsWhenNullResult() {
+        jdbcTemplate.execute("DELETE FROM student_courses");
+        jdbcTemplate.execute("DELETE FROM students");
+
+        int expected = 0;
+        int actual = dao.getTotalNumber();
+
+        assertEquals(expected, actual);
+    }
+
 }

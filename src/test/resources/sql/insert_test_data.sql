@@ -1,6 +1,7 @@
 INSERT INTO groups (group_name)
 VALUES ('A'),
-       ('B');
+       ('B'),
+       ('C');
 
 INSERT INTO students (group_id, first_name, last_name)
 VALUES (1, 'Alex', 'Williams'),

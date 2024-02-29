@@ -13,8 +13,10 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -81,6 +83,30 @@ class JdbcCourseDaoTest {
                 "course_id = 1 AND course_name = 'UpdatedName' AND course_description = 'UpdatedDescription'");
 
         assertEquals(expected, actual);
+    }
+
+    @Test
+    void testFindByIdWhenCourseExists() {
+        int courseId = 1;
+
+        Optional<Course> optionalCourse = dao.findById(courseId);
+        Course actual = optionalCourse.get();
+
+        Course expected = Course.builder()
+                .id(courseId)
+                .name("Java Basics")
+                .description("Introduction to Java programming")
+                .build();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testFindByIdWhenCourseDoesNotExist() {
+        int courseId = -1;
+        Optional<Course> optionalCourse = dao.findById(courseId);
+
+        assertFalse(optionalCourse.isPresent());
     }
 
     @Test
