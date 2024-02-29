@@ -89,8 +89,8 @@ class JdbcCourseDaoTest {
     void testFindByIdWhenCourseExists() {
         int courseId = 1;
 
-        Optional<Course> optionalCourse = dao.findById(courseId);
-        Course actual = optionalCourse.get();
+        Optional<Course> optional = dao.findById(courseId);
+        Course actual = optional.get();
 
         Course expected = Course.builder()
                 .id(courseId)
@@ -104,9 +104,9 @@ class JdbcCourseDaoTest {
     @Test
     void testFindByIdWhenCourseDoesNotExist() {
         int courseId = -1;
-        Optional<Course> optionalCourse = dao.findById(courseId);
+        Optional<Course> optional = dao.findById(courseId);
 
-        assertFalse(optionalCourse.isPresent());
+        assertFalse(optional.isPresent());
     }
 
     @Test

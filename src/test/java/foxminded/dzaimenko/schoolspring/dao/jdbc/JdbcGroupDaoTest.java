@@ -1,6 +1,7 @@
 package foxminded.dzaimenko.schoolspring.dao.jdbc;
 
 import foxminded.dzaimenko.schoolspring.dao.GroupDao;
+import foxminded.dzaimenko.schoolspring.model.Course;
 import foxminded.dzaimenko.schoolspring.model.Group;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,10 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -100,6 +103,29 @@ class JdbcGroupDaoTest {
         int actual = groups.size();
 
         assertEquals(expected, actual);
+    }
+
+    @Test
+    void testFindByIdWhenGroupExists() {
+        int groupId = 1;
+
+        Optional<Group> optional = dao.findById(groupId);
+        Group actual = optional.get();
+
+        Group expected = Group.builder()
+                .id(groupId)
+                .name("A")
+                .build();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testFindByIdWhenGroupDoesNotExist() {
+        int groupId = -1;
+        Optional<Group> optional = dao.findById(groupId);
+
+        assertFalse(optional.isPresent());
     }
 
 }
