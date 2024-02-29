@@ -75,8 +75,13 @@ public class JdbcGroupDao implements GroupDao {
 
     @Override
     public Optional<Group> findById(int id) {
-        Group group = jdbcTemplate.queryForObject(SQL_SELECT_GROUP_BY_ID, groupRowMapper, id);
-        return Optional.ofNullable(group);
+        try {
+            Group group = jdbcTemplate.queryForObject(SQL_SELECT_GROUP_BY_ID, groupRowMapper, id);
+            return Optional.of(group);
+
+        } catch (EmptyResultDataAccessException ex) {
+            return Optional.empty();
+        }
     }
 
     @Override

@@ -70,7 +70,8 @@ public class JdbcCourseDao implements CourseDao {
     public Optional<Course> findById(int id) {
         try {
             Course course = jdbcTemplate.queryForObject(SQL_SELECT_COURSE_BY_ID, courseRowMapper, id);
-            return Optional.ofNullable(course);
+            return Optional.of(course);
+
         } catch (EmptyResultDataAccessException ex) {
             return Optional.empty();
         }
