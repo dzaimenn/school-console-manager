@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  school_db:
+    image: postgres
+    restart: always
+
+    environment:
+      POSTGRES_PASSWORD: "1234"
+      POSTGRES_USER: "school_manager"
+      POSTGRES_DB: "school_db"
+
+    ports:
+      - "127.0.0.1:5432:5432"
