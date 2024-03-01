@@ -105,14 +105,13 @@ class JdbcGroupDaoTest {
     }
 
     @Test
-    void testFindByIdWhenGroupExists() {
-        int groupId = 1;
-
-        Optional<Group> optional = dao.findById(groupId);
+    void testFindById() {
+        int id = 1;
+        Optional<Group> optional = dao.findById(id);
         Group actual = optional.get();
 
         Group expected = Group.builder()
-                .id(groupId)
+                .id(1)
                 .name("A")
                 .build();
 
@@ -120,9 +119,9 @@ class JdbcGroupDaoTest {
     }
 
     @Test
-    void testFindByIdWhenGroupDoesNotExist() {
-        int groupId = -1;
-        Optional<Group> optional = dao.findById(groupId);
+    void testFindByIdNotFound() {
+        int id = -1;
+        Optional<Group> optional = dao.findById(id);
 
         assertFalse(optional.isPresent());
     }

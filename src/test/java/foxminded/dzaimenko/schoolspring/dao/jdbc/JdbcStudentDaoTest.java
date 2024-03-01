@@ -156,13 +156,13 @@ class JdbcStudentDaoTest {
 
     @Test
     void testFindByIdWhenStudentExists() {
-        int studentId = 1;
+        int id = 1;
 
-        Optional<Student> optional = dao.findById(studentId);
+        Optional<Student> optional = dao.findById(id);
         Student actual = optional.get();
 
         Student expected = Student.builder()
-                .id(studentId)
+                .id(id)
                 .groupId(1)
                 .firstName("Alex")
                 .lastName("Williams")

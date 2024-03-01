@@ -86,14 +86,23 @@ class JdbcCourseDaoTest {
     }
 
     @Test
-    void testFindByIdWhenCourseExists() {
-        int courseId = 1;
+    void testDelete() {
+        int expected = JdbcTestUtils.countRowsInTable(jdbcTemplate, "courses") - 1;
 
-        Optional<Course> optional = dao.findById(courseId);
+        dao.deleteById(1);
+        int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "courses");
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testFindById() {
+        int id = 1;
+        Optional<Course> optional = dao.findById(id);
         Course actual = optional.get();
 
         Course expected = Course.builder()
-                .id(courseId)
+                .id(id)
                 .name("Java Basics")
                 .description("Introduction to Java programming")
                 .build();
@@ -102,21 +111,11 @@ class JdbcCourseDaoTest {
     }
 
     @Test
-    void testFindByIdWhenCourseDoesNotExist() {
-        int courseId = -1;
-        Optional<Course> optional = dao.findById(courseId);
+    void testFindByIdNotFound() {
+        int id = -1;
+        Optional<Course> optional = dao.findById(id);
 
         assertFalse(optional.isPresent());
-    }
-
-    @Test
-    void testDelete() {
-        int expected = JdbcTestUtils.countRowsInTable(jdbcTemplate, "courses") - 1;
-
-        dao.deleteById(1);
-        int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "courses");
-
-        assertEquals(expected, actual);
     }
 
 }
