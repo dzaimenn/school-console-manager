@@ -4,6 +4,7 @@ import foxminded.dzaimenko.schoolspring.dao.StudentDao;
 import foxminded.dzaimenko.schoolspring.dao.jdbc.rowmapper.StudentRowMapper;
 import foxminded.dzaimenko.schoolspring.model.Student;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -89,13 +90,7 @@ public class JdbcStudentDao implements StudentDao {
 
     @Override
     public Optional<Student> findById(int id) {
-        try {
-            Student student = jdbcTemplate.queryForObject(SQL_SELECT_STUDENT_BY_ID, studentRowMapper, id);
-            return Optional.of(student);
-
-        } catch (EmptyResultDataAccessException ex) {
-            return Optional.empty();
-        }
+        return DataAccessUtils.optionalResult(jdbcTemplate.query(SQL_SELECT_STUDENT_BY_ID, studentRowMapper, id));
     }
 
     @Override

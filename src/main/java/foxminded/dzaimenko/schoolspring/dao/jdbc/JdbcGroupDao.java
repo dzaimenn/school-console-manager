@@ -4,6 +4,7 @@ import foxminded.dzaimenko.schoolspring.dao.GroupDao;
 import foxminded.dzaimenko.schoolspring.dao.jdbc.rowmapper.GroupRowMapper;
 import foxminded.dzaimenko.schoolspring.model.Group;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -75,13 +76,7 @@ public class JdbcGroupDao implements GroupDao {
 
     @Override
     public Optional<Group> findById(int id) {
-        try {
-            Group group = jdbcTemplate.queryForObject(SQL_SELECT_GROUP_BY_ID, groupRowMapper, id);
-            return Optional.of(group);
-
-        } catch (EmptyResultDataAccessException ex) {
-            return Optional.empty();
-        }
+        return DataAccessUtils.optionalResult(jdbcTemplate.query(SQL_SELECT_GROUP_BY_ID, groupRowMapper, id));
     }
 
     @Override
